@@ -1,59 +1,65 @@
 'use client'
 
-import { useRef, useState } from "react"
+import { useRouter } from "next/navigation"
+import { useEffect, useState } from "react"
+import { motion } from "framer-motion"
+import { Inter, Noto_Sans_JP } from 'next/font/google'
 
-export default function Home() {
-  const videoRef = useRef<HTMLVideoElement>(null)
-  const canvasRef = useRef<HTMLCanvasElement>(null)
-  const [imageUrl, setImageUrl] = useState("")
+const inter = Inter({ weight: ['900'], subsets: ['latin'] })
+const notoSansJP = Noto_Sans_JP({ weight: ['400', '700'], subsets: ['latin'] })
 
-  const startCamera = async () => {
-    const stream = await navigator.mediaDevices.getUserMedia({ video: true })
-    if (videoRef.current) {
-      videoRef.current.srcObject = stream
+export default function StartPage() {
+  const router = useRouter()
+  const [checkedAuth, setCheckedAuth] = useState(false)
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const isAuthenticated = localStorage.getItem('isAuthenticated')
+      if (isAuthenticated !== 'true') {
+        router.push('/login')
+      } else {
+        setCheckedAuth(true)
+      }
     }
-  }
+  }, [])
 
-  const capturePhoto = () => {
-    const canvas = canvasRef.current
-    const video = videoRef.current
-    if (canvas && video) {
-      canvas.width = video.videoWidth
-      canvas.height = video.videoHeight
-      const ctx = canvas.getContext("2d")
-      ctx?.drawImage(video, 0, 0)
-      const dataUrl = canvas.toDataURL("image/jpeg")
-      setImageUrl(dataUrl)
-      sendToBackend(dataUrl)
-    }
-  }
-
-  const sendToBackend = async (dataUrl: string) => {
-    const blob = await (await fetch(dataUrl)).blob()
-    const formData = new FormData()
-    formData.append("file", blob, "photo.jpg")
-
-    const res = await fetch("http://localhost:8000/upload", {
-      method: "POST",
-      body: formData,
-    })
-
-    const result = await res.json()
-    alert(result.message)
+  if (!checkedAuth) {
+    return null // ログインチェック中は何も表示しない（ちらつき防止）
   }
 
   return (
-    <div className="flex flex-col items-center gap-4 p-4">
-      <video
-        ref={videoRef}
-        autoPlay
-        className="w-full max-w-md rounded shadow"
-        style={{ objectFit: "contain" }}  
-      />
-      <button onClick={startCamera} className="bg-blue-500 text-white px-4 py-2 rounded">📸 カメラ起動</button>
-      <button onClick={capturePhoto} className="bg-green-500 text-white px-4 py-2 rounded">🖼 撮影して送信</button>
-      <canvas ref={canvasRef} style={{ display: "none" }} />
-      {imageUrl && <img src={imageUrl} className="mt-4 w-64" />}
-    </div>
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 1 }}
+      className={`flex flex-col items-center gap-8 p-6 pt-24 pb-24 bg-gray-100 min-h-screen ${notoSansJP.className}`}
+    >
+      {/* タイトル */}
+      <h2 className={`${inter.className} text-5xl italic tracking-tight text-gray-800 border-b-2 border-gray-300 pb-2`}>
+        FACE GAUGE
+      </h2>
+
+      {/* キャッチコピー */}
+      <p className="text-center text-2xl font-bold text-gray-800">
+        “かっこよく年をとる”
+        <br />
+        を科学する
+      </p>
+
+      {/* カメラ起動ボタン */}
+      <button
+        onClick={() => router.push('/camera')}
+        className="bg-gray-300 hover:bg-gray-400 text-gray-800 px-12 py-8 rounded-lg shadow-md flex flex-col items-center gap-2 transition-all duration-300"
+      >
+        <img src="/icons/camera.svg" alt="カメラ" className="w-16 h-16" />
+        <span className={`${inter.className} text-4xl italic font-black border-b-2 border-gray-400 tracking-tight`}>
+          FACE GAUGE
+        </span>
+        <span className="text-base not-italic font-normal">
+          - 顔撮影 -
+        </span>
+      </button>
+
+    </motion.div>
   )
 }

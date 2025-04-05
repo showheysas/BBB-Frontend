@@ -9,9 +9,12 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "face-api.js": "^0.22.2",
+    "framer-motion": "^12.6.3",
     "next": "15.2.4",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "recharts": "^2.15.2"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
