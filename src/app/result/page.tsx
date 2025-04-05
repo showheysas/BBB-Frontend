@@ -1,10 +1,12 @@
 'use client'
 
 import { useRouter } from 'next/navigation' // ✅ useSearchParams削除
-import { useEffect, useState } from 'react'
+import { useState } from 'react' // deploy時エラーによりuseEffect削除
+// import { useEffect, useState } from 'react'
 import { Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer } from 'recharts'
 import { Inter, Noto_Sans_JP } from 'next/font/google'
 import { motion, AnimatePresence } from 'framer-motion'
+import { PolarAngleAxisProps } from 'recharts' // deploy時エラーにより追加
 
 const inter = Inter({ weight: ['900'], subsets: ['latin'] })
 const notoSansJP = Noto_Sans_JP({ weight: ['400', '700'], subsets: ['latin'] })
@@ -39,12 +41,21 @@ export default function ResultPage() {
     total: { score: 80, comment: '全体的に爽やかな状態が維持できています！' }
   }
 
-  const renderTwoLineLabel = (props: any) => {
+  type CustomPolarLabelProps = {
+    payload: {
+      value: string
+    }
+    x: number
+    y: number
+    textAnchor: string
+  }
+  
+  const renderTwoLineLabel = (props: CustomPolarLabelProps) => {
     const { payload, x, y, textAnchor } = props
     const lines = payload.value.split('\n')
     return (
       <text x={x} y={y} textAnchor={textAnchor} fill="#666" fontSize="16">
-        {lines.map((line: string, index: number) => (
+        {lines.map((line, index) => (
           <tspan key={index} x={x} dy={index === 0 ? 0 : 16}>
             {line}
           </tspan>
@@ -52,6 +63,21 @@ export default function ResultPage() {
       </text>
     )
   }
+
+  // deploy時エラーにより上記に差し替え
+  // const renderTwoLineLabel = (props: any) => {
+  //   const { payload, x, y, textAnchor } = props
+  //   const lines = payload.value.split('\n')
+  //   return (
+  //     <text x={x} y={y} textAnchor={textAnchor} fill="#666" fontSize="16">
+  //       {lines.map((line: string, index: number) => (
+  //         <tspan key={index} x={x} dy={index === 0 ? 0 : 16}>
+  //           {line}
+  //         </tspan>
+  //       ))}
+  //     </text>
+  //   )
+  // }
 
   return (
     <motion.div
