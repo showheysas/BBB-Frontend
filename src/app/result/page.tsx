@@ -6,7 +6,6 @@ import { useState } from 'react' // deploy時エラーによりuseEffect削除
 import { Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer } from 'recharts'
 import { Inter, Noto_Sans_JP } from 'next/font/google'
 import { motion, AnimatePresence } from 'framer-motion'
-import { PolarAngleAxisProps } from 'recharts' // deploy時エラーにより追加
 
 const inter = Inter({ weight: ['900'], subsets: ['latin'] })
 const notoSansJP = Noto_Sans_JP({ weight: ['400', '700'], subsets: ['latin'] })
