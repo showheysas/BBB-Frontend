@@ -52,7 +52,7 @@ export default function StartPage() {
         onClick={() => router.push('/camera')}
         className="bg-gray-300 hover:bg-gray-400 text-gray-800 px-12 py-8 rounded-lg shadow-md flex flex-col items-center gap-2 transition-all duration-300"
       >
-        <img src="/icons/camera.svg" alt="カメラ" className="w-16 h-16" />
+        <img src="/icons/camera.svg" alt="カメラ" className="w-20 h-20" />
         <span className={`${inter.className} text-4xl italic font-black border-b-2 border-gray-400 tracking-tight`}>
           FACE GAUGE
         </span>

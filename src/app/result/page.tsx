@@ -1,8 +1,7 @@
 'use client'
 
-import { useRouter } from 'next/navigation' // ✅ useSearchParams削除
-import { useState } from 'react' // deploy時エラーによりuseEffect削除
-// import { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
+import { useState } from 'react'
 import { Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer } from 'recharts'
 import { Inter, Noto_Sans_JP } from 'next/font/google'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -11,22 +10,25 @@ import Link from 'next/link'
 const inter = Inter({ weight: ['900'], subsets: ['latin'] })
 const notoSansJP = Noto_Sans_JP({ weight: ['400', '700'], subsets: ['latin'] })
 
+// 🔵 仮のログインユーザー名
+const MOCK_USERNAME = 'kiriyama'
+
 export default function ResultPage() {
   const router = useRouter()
   const [showResult, setShowResult] = useState(false)
+  const [currentTime, setCurrentTime] = useState<string | null>(null)
 
-  // ✅ バックエンドから画像取得するコードは削除・コメントアウト
-  /*
-  const searchParams = useSearchParams()
-  const [imageSrc, setImageSrc] = useState<string | null>(null)
-
-  useEffect(() => {
-    const filename = searchParams.get('img')
-    if (filename) {
-      setImageSrc(`http://localhost:8000/images/${filename}`)
-    }
-  }, [searchParams])
-  */
+  const handleMeasureClick = () => {
+    setCurrentTime(new Date().toLocaleString('ja-JP', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit'
+    }))
+    setShowResult(true)
+  }
 
   const fixedInfo = [
     { key: 'skin', subject: 'スキンコンディション', fullMark: 10 },
@@ -42,14 +44,12 @@ export default function ResultPage() {
   }
 
   type CustomPolarLabelProps = {
-    payload: {
-      value: string
-    }
+    payload: { value: string }
     x: number
     y: number
     textAnchor: string
   }
-  
+
   const renderTwoLineLabel = (props: CustomPolarLabelProps) => {
     const { payload, x, y, textAnchor } = props
     const lines = payload.value.split('\n')
@@ -63,21 +63,6 @@ export default function ResultPage() {
       </text>
     )
   }
-
-  // deploy時エラーにより上記に差し替え
-  // const renderTwoLineLabel = (props: any) => {
-  //   const { payload, x, y, textAnchor } = props
-  //   const lines = payload.value.split('\n')
-  //   return (
-  //     <text x={x} y={y} textAnchor={textAnchor} fill="#666" fontSize="16">
-  //       {lines.map((line: string, index: number) => (
-  //         <tspan key={index} x={x} dy={index === 0 ? 0 : 16}>
-  //           {line}
-  //         </tspan>
-  //       ))}
-  //     </text>
-  //   )
-  // }
 
   return (
     <motion.div
@@ -98,7 +83,7 @@ export default function ResultPage() {
         </div>
       </div>
 
-      {/* ✅ 撮影画像（固定画像に変更） */}
+      {/* 撮影画像（固定画像） */}
       <img src="/kiriyama.png" alt="Captured" className="w-64 rounded shadow mb-6" />
 
       {/* 撮り直し・測定するボタン */}
@@ -111,7 +96,7 @@ export default function ResultPage() {
             撮り直し
           </button>
           <button
-            onClick={() => setShowResult(true)}
+            onClick={handleMeasureClick}
             className="bg-gray-300 hover:bg-gray-400 text-gray-800 px-5 py-2 rounded-md shadow text-lg font-medium transition-all duration-300"
           >
             測定する
@@ -129,6 +114,14 @@ export default function ResultPage() {
             transition={{ duration: 1 }}
             className="flex flex-col items-center w-full"
           >
+            {/* 🆕 日付＋ユーザー名 */}
+            {currentTime && (
+              <div className="mb-6 text-center">
+                <p className="text-lg text-gray-700">{currentTime}</p>
+                <p className="text-xl font-bold text-gray-800">{MOCK_USERNAME} さん</p>
+              </div>
+            )}
+
             {/* トータルスコア */}
             <div className="border border-gray-600 rounded p-4 mb-2 w-full max-w-md text-center bg-white">
               <p className="text-2xl font-extrabold text-gray-800">トータルスコア</p>
@@ -160,7 +153,7 @@ export default function ResultPage() {
                     fill="#9CA3AF"
                     fillOpacity={0.4}
                     strokeWidth={2}
-                    isAnimationActive={true}
+                    isAnimationActive
                     animationDuration={1500}
                   />
                 </RadarChart>
@@ -182,9 +175,8 @@ export default function ResultPage() {
               ))}
             </div>
 
-            {/* ボタン前の説明とボタン */}
+            {/* OKパターン／イマイチパターン */}
             <div className="flex flex-col gap-8 w-full max-w-md mt-8">
-              {/* OKパターン */}
               <div className="flex flex-col items-center gap-2">
                 <p className="text-gray-700 text-center text-sm">
                   このスコアで問題ないときは...
@@ -197,7 +189,6 @@ export default function ResultPage() {
                 </button>
               </div>
 
-              {/* イマイチパターン */}
               <div className="flex flex-col items-center gap-2">
                 <p className="text-gray-700 text-center text-sm">
                   思ったよりスコアがイマイチだったときは...
