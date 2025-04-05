@@ -4,9 +4,10 @@ import { useEffect, useState, useRef } from "react"
 import { nets, detectAllFaces, TinyFaceDetectorOptions } from "face-api.js"
 import { useRouter } from "next/navigation"
 import { motion } from "framer-motion"
-import { Noto_Sans_JP } from 'next/font/google'
+import { Inter, Noto_Sans_JP } from 'next/font/google'
 
 const notoSansJP = Noto_Sans_JP({ weight: ['400', '700'], subsets: ['latin'] })
+const inter = Inter({ weight: ['900'], subsets: ['latin'] })
 
 export default function CameraPage() {
   const videoRef = useRef<HTMLVideoElement>(null)
@@ -89,9 +90,11 @@ export default function CameraPage() {
       setTimeout(() => setShowShutter(false), 300)
 
       // ✅ カメラOFFにする
-      if (stream) {
-        stream.getTracks().forEach(track => track.stop())
+      if (video && video.srcObject) {
+        const currentStream = video.srcObject as MediaStream
+        currentStream.getTracks().forEach(track => track.stop())
       }
+      
 
       setCaptured(true) // ✅ 撮影済みに設定
 
@@ -134,6 +137,13 @@ export default function CameraPage() {
       transition={{ duration: 1 }}
       className={`flex flex-col items-center p-6 pt-24 pb-24 bg-gray-100 min-h-screen relative ${notoSansJP.className}`}
     >
+      {/* タイトル */}
+      <div className="flex flex-col items-center text-center mb-8 space-y-4 w-full max-w-md">
+        <h2 className={`${inter.className} text-5xl italic tracking-tight leading-tight text-gray-800 border-b-2 border-gray-300 pb-2`}>
+          FACE GAUGE
+        </h2>
+      </div>
+
       <div className="relative w-full max-w-md">
         <video
           ref={videoRef}
@@ -158,6 +168,8 @@ export default function CameraPage() {
           </motion.div>
         )}
       </div>
+
+      <p className="text-xl text-gray-800 text-center mt-8">画面の中にあなたの顔を入れてください<br />カウントダウンのあと自動で撮影します</p>
 
       {/* シャッターエフェクト */}
       {showShutter && (

@@ -6,6 +6,7 @@ import { useState } from 'react' // deploy時エラーによりuseEffect削除
 import { Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer } from 'recharts'
 import { Inter, Noto_Sans_JP } from 'next/font/google'
 import { motion, AnimatePresence } from 'framer-motion'
+import Link from 'next/link'
 
 const inter = Inter({ weight: ['900'], subsets: ['latin'] })
 const notoSansJP = Noto_Sans_JP({ weight: ['400', '700'], subsets: ['latin'] })
@@ -189,10 +190,10 @@ export default function ResultPage() {
                   このスコアで問題ないときは...
                 </p>
                 <button
-                  onClick={() => router.push('/positive')}
+                  onClick={() => router.push('/todaysWord')}
                   className="bg-gray-700 hover:bg-gray-800 text-white px-6 py-2 rounded shadow text-lg font-semibold transition"
                 >
-                  OK！
+                  Today's WORDを見る！
                 </button>
               </div>
 
@@ -224,13 +225,19 @@ export default function ResultPage() {
       {/* 下部ナビゲーションバー */}
       <div className="fixed bottom-0 w-full flex bg-white shadow-inner h-20 z-50">
         <div className="w-1/3 flex items-center justify-center border-r border-gray-300">
-          <img src="/icons/back.svg" alt="戻る" className="w-6 h-6" />
+          <Link href="/camera">
+            <img src="/icons/back.svg" alt="戻る" className="w-6 h-6 cursor-pointer" />
+          </Link>
         </div>
         <div className="w-1/3 flex items-center justify-center border-r border-gray-300">
-          <img src="/icons/home.svg" alt="ホーム" className="w-6 h-6" />
+          <Link href="/">
+            <img src="/icons/home.svg" alt="ホーム" className="w-6 h-6 cursor-pointer" />
+          </Link>
         </div>
         <div className="w-1/3 flex items-center justify-center">
-          <img src="/icons/settings.svg" alt="設定" className="w-6 h-6" />
+          <Link href="/settings">
+            <img src="/icons/settings.svg" alt="設定" className="w-6 h-6 cursor-pointer" />
+          </Link>
         </div>
       </div>
     </motion.div>
