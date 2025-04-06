@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useRef } from "react"
 // @ts-ignore
-import { nets, detectAllFaces, TinyFaceDetectorOptions } from 'face-api.js/build/face-api.browser'
+import { nets, detectAllFaces, TinyFaceDetectorOptions } from 'face-api.js'
 import { useRouter } from "next/navigation"
 import { motion } from "framer-motion"
 import { Inter, Noto_Sans_JP } from 'next/font/google'
