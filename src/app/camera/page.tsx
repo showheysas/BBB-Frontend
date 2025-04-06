@@ -1,8 +1,7 @@
 'use client'
 
-import { useEffect, useState, useRef } from "react"
-// @ts-ignore
-import { nets, detectAllFaces, TinyFaceDetectorOptions } from 'face-api.js'
+import { useEffect, useState, useRef, useCallback } from "react"
+import dynamic from "next/dynamic"
 import { useRouter } from "next/navigation"
 import { motion } from "framer-motion"
 import { Inter, Noto_Sans_JP } from 'next/font/google'
@@ -18,8 +17,25 @@ export default function CameraPage() {
   const [isCountingDown, setIsCountingDown] = useState(false)
   const [stream, setStream] = useState<MediaStream | null>(null)
   const [showShutter, setShowShutter] = useState(false)
-  const [captured, setCaptured] = useState(false) // ✅ 撮影完了したかどうか
+  const [captured, setCaptured] = useState(false)
   const router = useRouter()
+
+  const detectFace = useCallback(async () => {
+    const faceapi = await import('face-api.js')
+    if (!videoRef.current) return
+
+    const interval = setInterval(async () => {
+      const detections = await faceapi.detectAllFaces(
+        videoRef.current!,
+        new faceapi.TinyFaceDetectorOptions()
+      )
+
+      if (detections.length > 0 && !captured) {
+        clearInterval(interval)
+        startCountdownAndCapture()
+      }
+    }, 500)
+  }, [captured])
 
   useEffect(() => {
     const startCamera = async () => {
@@ -31,7 +47,8 @@ export default function CameraPage() {
     }
 
     const loadModels = async () => {
-      await nets.tinyFaceDetector.loadFromUri("/models/tiny_face_detector")
+      const faceapi = await import('face-api.js')
+      await faceapi.nets.tinyFaceDetector.loadFromUri("/models/tiny_face_detector")
     }
 
     loadModels()
@@ -43,23 +60,7 @@ export default function CameraPage() {
         stream.getTracks().forEach(track => track.stop())
       }
     }
-  }, [])
-
-  const detectFace = async () => {
-    if (!videoRef.current) return
-
-    const interval = setInterval(async () => {
-      const detections = await detectAllFaces(
-        videoRef.current!,
-        new TinyFaceDetectorOptions()
-      )
-
-      if (detections.length > 0 && !captured) {  // ✅ 撮影済みだったら反応しない
-        clearInterval(interval)
-        startCountdownAndCapture()
-      }
-    }, 500)
-  }
+  }, [detectFace, stream])
 
   const startCountdownAndCapture = () => {
     setIsCountingDown(true)
@@ -87,50 +88,21 @@ export default function CameraPage() {
       const ctx = canvas.getContext("2d")
       ctx?.drawImage(video, 0, 0)
 
-      // ✅ シャッターエフェクト
       setShowShutter(true)
       setTimeout(() => setShowShutter(false), 300)
 
-      // ✅ カメラOFFにする
-      if (video && video.srcObject) {
+      if (video.srcObject) {
         const currentStream = video.srcObject as MediaStream
         currentStream.getTracks().forEach(track => track.stop())
       }
-      
 
-      setCaptured(true) // ✅ 撮影済みに設定
+      setCaptured(true)
 
-      // ✅ 本来はサーバーに送信
-      // sendToBackend(canvas.toDataURL("image/jpeg"))
-
-      // ✅ 代わりにローカルで保存 → /result に遷移する
       setTimeout(() => {
         router.push('/result')
       }, 1000)
     }
   }
-
-  // ✅ 元のバックエンド送信コード（コメントアウトして保存）
-  /*
-  const sendToBackend = async (dataUrl: string) => {
-    const blob = await (await fetch(dataUrl)).blob()
-    const formData = new FormData()
-    formData.append("file", blob, "photo.jpg")
-
-    const res = await fetch("http://localhost:8000/upload", {
-      method: "POST",
-      body: formData,
-    })
-
-    if (res.ok) {
-      const result = await res.json()
-      const filename = result.filename
-      router.push(`/result?img=${filename}`)
-    } else {
-      alert("送信失敗")
-    }
-  }
-  */
 
   return (
     <motion.div
@@ -139,7 +111,6 @@ export default function CameraPage() {
       transition={{ duration: 1 }}
       className={`flex flex-col items-center p-6 pt-24 pb-24 bg-gray-100 min-h-screen relative ${notoSansJP.className}`}
     >
-      {/* タイトル */}
       <div className="flex flex-col items-center text-center mb-8 space-y-4 w-full max-w-md">
         <h2 className={`${inter.className} text-5xl italic tracking-tight leading-tight text-gray-800 border-b-2 border-gray-300 pb-1`}>
           FACE GAUGE
@@ -156,7 +127,6 @@ export default function CameraPage() {
           style={{ objectFit: "contain" }}
         />
 
-        {/* カウントダウンは映像の中央に */}
         {isCountingDown && countdown !== null && (
           <motion.div
             key={countdown}
@@ -171,16 +141,16 @@ export default function CameraPage() {
         )}
       </div>
 
-      <p className="text-xl text-gray-800 text-center mt-8">画面の中にあなたの顔を入れてください<br />カウントダウンのあと自動で撮影します</p>
+      <p className="text-xl text-gray-800 text-center mt-8">
+        画面の中にあなたの顔を入れてください<br />カウントダウンのあと自動で撮影します
+      </p>
 
-      {/* シャッターエフェクト */}
       {showShutter && (
         <div className="absolute top-0 left-0 w-full h-full bg-white opacity-70 animate-fadeOut z-50"></div>
       )}
 
       <canvas ref={canvasRef} style={{ display: "none" }} />
 
-      {/* 下部ナビゲーションバー */}
       <div className="fixed bottom-0 w-full flex bg-white shadow-inner h-20 z-50">
         <div className="w-1/3 flex items-center justify-center border-r border-gray-300">
           <Link href="/">
@@ -198,7 +168,6 @@ export default function CameraPage() {
           </Link>
         </div>
       </div>
-
     </motion.div>
   )
 }
