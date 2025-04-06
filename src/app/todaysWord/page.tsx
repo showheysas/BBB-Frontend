@@ -82,11 +82,17 @@ export default function TodaysWordPage() {
       transition={{ duration: 1 }}
       className={`flex flex-col items-center p-6 pt-24 pb-24 bg-gray-100 min-h-screen text-center ${notoSansJP.className}`}
     >
-      <h2 className={`${inter.className} text-5xl italic tracking-tight text-gray-800 border-b-2 border-gray-300 pb-2 mb-8`}>
-        FACE GAUGE
-      </h2>
+      {/* タイトル */}
+      <div className="flex flex-col text-center mb-8"> 
+        <h2 className={`${inter.className} text-5xl italic tracking-tight text-gray-800 border-b-2 border-gray-300 pb-1`}>
+          FACE GAUGE
+        </h2>
+        <span className="text-base text-gray-500 mt-1 tracking-wide">
+          フェイス ゲージ
+        </span>
+      </div>
 
-      <div className="bg-gray-300 px-6 py-2 rounded shadow-md w-full max-w-md mb-8">
+      <div className="text-center bg-gray-300 px-6 py-2 rounded shadow-md w-full max-w-md mb-14">
         <p className="text-2xl italic font-medium text-gray-700 tracking-tight leading-tight">
           - Daily Inspiration -
         </p>
@@ -108,7 +114,7 @@ export default function TodaysWordPage() {
       {/* ✅ ボタン追加 */}
       <button
         onClick={getRandomMessage}
-        className="mt-6 bg-gray-700 hover:bg-gray-800 text-white px-6 py-2 rounded shadow text-lg font-semibold transition"
+        className="fixed bottom-30 bg-gray-700 hover:bg-gray-800 text-white px-6 py-2 rounded shadow text-lg font-semibold transition z-40"
       >
         他のWORDを見る
       </button>
@@ -116,7 +122,7 @@ export default function TodaysWordPage() {
       {/* 下部ナビゲーションバー */}
       <div className="fixed bottom-0 w-full flex bg-white shadow-inner h-20 z-50">
         <div className="w-1/3 flex items-center justify-center border-r border-gray-300">
-          <Link href="/camera">
+          <Link href="/result">
             <img src="/icons/back.svg" alt="戻る" className="w-6 h-6 cursor-pointer" />
           </Link>
         </div>

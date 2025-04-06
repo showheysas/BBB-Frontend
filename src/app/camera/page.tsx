@@ -5,6 +5,7 @@ import { nets, detectAllFaces, TinyFaceDetectorOptions } from "face-api.js"
 import { useRouter } from "next/navigation"
 import { motion } from "framer-motion"
 import { Inter, Noto_Sans_JP } from 'next/font/google'
+import Link from 'next/link'
 
 const notoSansJP = Noto_Sans_JP({ weight: ['400', '700'], subsets: ['latin'] })
 const inter = Inter({ weight: ['900'], subsets: ['latin'] })
@@ -139,7 +140,7 @@ export default function CameraPage() {
     >
       {/* タイトル */}
       <div className="flex flex-col items-center text-center mb-8 space-y-4 w-full max-w-md">
-        <h2 className={`${inter.className} text-5xl italic tracking-tight leading-tight text-gray-800 border-b-2 border-gray-300 pb-2`}>
+        <h2 className={`${inter.className} text-5xl italic tracking-tight leading-tight text-gray-800 border-b-2 border-gray-300 pb-1`}>
           FACE GAUGE
         </h2>
       </div>
@@ -177,6 +178,26 @@ export default function CameraPage() {
       )}
 
       <canvas ref={canvasRef} style={{ display: "none" }} />
+
+      {/* 下部ナビゲーションバー */}
+      <div className="fixed bottom-0 w-full flex bg-white shadow-inner h-20 z-50">
+        <div className="w-1/3 flex items-center justify-center border-r border-gray-300">
+          <Link href="/">
+            <img src="/icons/back.svg" alt="戻る" className="w-6 h-6 cursor-pointer" />
+          </Link>
+        </div>
+        <div className="w-1/3 flex items-center justify-center border-r border-gray-300">
+          <Link href="/">
+            <img src="/icons/home.svg" alt="ホーム" className="w-6 h-6 cursor-pointer" />
+          </Link>
+        </div>
+        <div className="w-1/3 flex items-center justify-center">
+          <Link href="/settings">
+            <img src="/icons/settings.svg" alt="設定" className="w-6 h-6 cursor-pointer" />
+          </Link>
+        </div>
+      </div>
+
     </motion.div>
   )
 }

@@ -1,10 +1,12 @@
 'use client'
 
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { useState } from 'react'
+import Link from 'next/link'
 
 export default function LoginPage() {
   const router = useRouter()
+  const searchParams = useSearchParams()
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
@@ -12,9 +14,13 @@ export default function LoginPage() {
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault()
 
+    // 仮ログイン認証
     if (username === 'kiriyama' && password === 'ren') {
       localStorage.setItem('isAuthenticated', 'true')
-      router.push('/')
+      localStorage.setItem('username', username)
+      window.dispatchEvent(new Event('authChanged'))  // ✅ 追加！
+      const redirect = searchParams.get('redirect') || '/result'
+      router.push(redirect)
     } else {
       setError('ユーザー名またはパスワードが間違っています')
     }
@@ -30,7 +36,7 @@ export default function LoginPage() {
           placeholder="ユーザー名"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
-          className="border p-2 rounded text-black placeholder-gray-400" // ✅ ここ
+          className="border p-2 rounded text-black placeholder-gray-400"
           required
         />
         <input
@@ -38,14 +44,40 @@ export default function LoginPage() {
           placeholder="パスワード"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="border p-2 rounded text-black placeholder-gray-400" // ✅ ここ
+          className="border p-2 rounded text-black placeholder-gray-400"
           required
         />
         {error && <p className="text-red-500 text-sm">{error}</p>}
-        <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded">
+
+        <button type="submit" className="bg-gray-800 text-white px-4 py-2 rounded mb-8">
           ログイン
         </button>
+
+        <p className="text-gray-700 text-center text-sm">
+          もしくは
+        </p>
+
+        <button
+          onClick={() => {
+            const redirect = searchParams.get('redirect') || '/result'
+            router.push(`/register?redirect=${redirect}`);  {/* ✅ 修正 */}
+          }}
+          className="bg-gray-600 font-semibold text-white px-6 py-2 rounded shadow text-lg transition"
+        >
+          新規登録
+        </button>
       </form>
+
+      {/* 下部ナビゲーションバー */}
+      <div className="fixed bottom-0 w-full flex bg-white shadow-inner h-20 z-50">
+        <div className="w-1/3 flex items-center justify-center border-r border-gray-300"></div>
+        <div className="w-1/3 flex items-center justify-center border-r border-gray-300">
+          <Link href="/">
+            <img src="/icons/home.svg" alt="ホーム" className="w-6 h-6 cursor-pointer" />
+          </Link>
+        </div>
+        <div className="w-1/3 flex items-center justify-center"></div>
+      </div>
     </div>
   )
 }
