@@ -63,7 +63,7 @@ export default function LoginPage() {
           <button
             onClick={() => {
               const redirect = searchParams.get('redirect') || '/result'
-              router.push(`/register?redirect=${redirect}`);  {/* ✅ 修正 */}
+              router.push(`/register?redirect=${redirect}`);
             }}
             className="bg-gray-600 font-semibold text-white px-6 py-2 rounded shadow text-lg transition"
           >
