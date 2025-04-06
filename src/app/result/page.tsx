@@ -7,6 +7,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
 import { Inter, Noto_Sans_JP } from 'next/font/google'
 import { generateRandomFaceScore } from '@/lib/mockData'
+import Image from 'next/image'
 
 const inter = Inter({ weight: ['900'], subsets: ['latin'] })
 const notoSansJP = Noto_Sans_JP({ weight: ['400', '700'], subsets: ['latin'] })
@@ -96,7 +97,7 @@ export default function ResultPage() {
       </div>
 
       {/* 撮影画像 */}
-      <img src="/kiriyama.png" alt="Captured" className="w-64 rounded shadow mb-8" />
+      <Image src="/kiriyama.png" alt="Captured" width={256} height={256} className="rounded shadow mb-8" />
 
       {/* 撮り直し・測定するボタン */}
       {!showResult && (

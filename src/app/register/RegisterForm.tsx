@@ -65,7 +65,7 @@ export function RegisterForm() {
               <input
                 type={field === 'email' ? 'email' : field === 'birthday' ? 'date' : field === 'password' ? 'password' : 'text'}
                 name={field}
-                value={(formData as any)[field]}
+                value={formData[field as keyof typeof formData]}
                 onChange={handleChange}
                 required
                 className="border border-gray-300 rounded-md p-3 w-full bg-white text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-700"
