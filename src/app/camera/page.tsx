@@ -1,7 +1,6 @@
 'use client'
 
 import { useEffect, useState, useRef, useCallback } from "react"
-import dynamic from "next/dynamic"
 import { useRouter } from "next/navigation"
 import { motion } from "framer-motion"
 import { Inter, Noto_Sans_JP } from 'next/font/google'
@@ -20,66 +19,8 @@ export default function CameraPage() {
   const [captured, setCaptured] = useState(false)
   const router = useRouter()
 
-  const detectFace = useCallback(async () => {
-    const faceapi = await import('face-api.js')
-    if (!videoRef.current) return
-
-    const interval = setInterval(async () => {
-      const detections = await faceapi.detectAllFaces(
-        videoRef.current!,
-        new faceapi.TinyFaceDetectorOptions()
-      )
-
-      if (detections.length > 0 && !captured) {
-        clearInterval(interval)
-        startCountdownAndCapture()
-      }
-    }, 500)
-  }, [captured])
-
-  useEffect(() => {
-    const startCamera = async () => {
-      const mediaStream = await navigator.mediaDevices.getUserMedia({ video: true })
-      if (videoRef.current) {
-        videoRef.current.srcObject = mediaStream
-        setStream(mediaStream)
-      }
-    }
-
-    const loadModels = async () => {
-      const faceapi = await import('face-api.js')
-      await faceapi.nets.tinyFaceDetector.loadFromUri("/models/tiny_face_detector")
-    }
-
-    loadModels()
-    startCamera()
-    detectFace()
-
-    return () => {
-      if (stream) {
-        stream.getTracks().forEach(track => track.stop())
-      }
-    }
-  }, [detectFace, stream])
-
-  const startCountdownAndCapture = () => {
-    setIsCountingDown(true)
-    let count = 3
-    setCountdown(count)
-
-    const interval = setInterval(() => {
-      count -= 1
-      setCountdown(count)
-
-      if (count === 0) {
-        clearInterval(interval)
-        setIsCountingDown(false)
-        capturePhoto()
-      }
-    }, 1000)
-  }
-
-  const capturePhoto = () => {
+  // capturePhotoを先にuseCallbackで定義
+  const capturePhoto = useCallback(() => {
     const canvas = canvasRef.current
     const video = videoRef.current
     if (canvas && video) {
@@ -102,7 +43,68 @@ export default function CameraPage() {
         router.push('/result')
       }, 1000)
     }
-  }
+  }, [router])
+
+  // その後にstartCountdownAndCapture
+  const startCountdownAndCapture = useCallback(() => {
+    setIsCountingDown(true)
+    let count = 3
+    setCountdown(count)
+
+    const interval = setInterval(() => {
+      count -= 1
+      setCountdown(count)
+
+      if (count === 0) {
+        clearInterval(interval)
+        setIsCountingDown(false)
+        capturePhoto()
+      }
+    }, 1000)
+  }, [capturePhoto])
+
+  const detectFace = useCallback(async () => {
+    const faceapi = await import('face-api.js')
+    if (!videoRef.current) return
+
+    const interval = setInterval(async () => {
+      const detections = await faceapi.detectAllFaces(
+        videoRef.current!,
+        new faceapi.TinyFaceDetectorOptions()
+      )
+
+      if (detections.length > 0 && !captured) {
+        clearInterval(interval)
+        startCountdownAndCapture()
+      }
+    }, 500)
+  }, [captured, startCountdownAndCapture])
+
+  useEffect(() => {
+    const startCamera = async () => {
+      const mediaStream = await navigator.mediaDevices.getUserMedia({ video: true })
+      if (videoRef.current) {
+        videoRef.current.srcObject = mediaStream
+        setStream(mediaStream)
+      }
+    }
+
+    const loadModels = async () => {
+      const faceapi = await import('face-api.js')
+      await faceapi.nets.tinyFaceDetector.loadFromUri("/models/tiny_face_detector")
+    }
+
+    loadModels()
+    startCamera()
+    detectFace()
+
+    return () => {
+      if (videoRef.current?.srcObject) {
+        const currentStream = videoRef.current.srcObject as MediaStream
+        currentStream.getTracks().forEach(track => track.stop())
+      }
+    }
+  }, [detectFace]) // ✅ streamは依存から外した！
 
   return (
     <motion.div
