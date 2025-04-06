@@ -39,7 +39,7 @@ export default function RegisterPage() {
     localStorage.setItem('username', formData.username)
     window.dispatchEvent(new Event('authChanged'))  // ✅ 追加！
 
-    const redirect = searchParams.get('redirect') || '/result'
+    const redirect = searchParams.get('redirect') || '/'
     router.push(redirect)
   }
 
@@ -120,8 +120,8 @@ export default function RegisterPage() {
           すでにアカウントをお持ちですか？{' '}
           <span
             onClick={() => {
-              const redirect = searchParams.get('redirect') || '/result'
-              router.push(`/login?redirect=${redirect}`); {/* ✅ 修正 */}
+              const redirect = searchParams.get('redirect') || '/'
+              router.push(`/login?redirect=${redirect}`);
             }}
             className="text-gray-800 font-semibold cursor-pointer hover:underline"
           >

@@ -179,18 +179,18 @@ export default function ResultPage() {
                   ログイン、もしくは新規登録すると、各指標の説明やアドバイスを見ることができます
                 </p>
                 <div className="flex gap-4">
-                  <button
-                    onClick={() => router.push('/login')}
-                    className="bg-gray-700 hover:bg-gray-800 text-white px-4 py-2 rounded shadow"
-                  >
-                    ログイン
-                  </button>
-                  <button
-                    onClick={() => router.push('/register')}
-                    className="bg-gray-400 hover:bg-gray-500 text-white px-4 py-2 rounded shadow"
-                  >
-                    新規登録
-                  </button>
+                <button
+                  onClick={() => router.push('/login?redirect=/result')} // ← ここを追加！！
+                  className="bg-gray-700 hover:bg-gray-800 text-white px-4 py-2 rounded shadow"
+                >
+                  ログイン
+                </button>
+                <button
+                  onClick={() => router.push('/register?redirect=/result')} // ← ここも追加！！
+                  className="bg-gray-400 hover:bg-gray-500 text-white px-4 py-2 rounded shadow"
+                >
+                  新規登録
+                </button>
                 </div>
               </div>
             )}
