@@ -241,7 +241,7 @@ export default function ResultPage() {
                       onClick={() => router.push('/todaysWord')}
                       className="bg-gray-700 hover:bg-gray-800 font-semibold text-white px-6 py-2 rounded shadow text-lg transition"
                     >
-                      "Today's WORDを見る！"
+                      Today&apos;s WORDを見る！
                     </button>
                   </div>
 
