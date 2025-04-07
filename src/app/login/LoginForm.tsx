@@ -3,6 +3,7 @@
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useState } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 
 export function LoginForm() {
   const router = useRouter()
@@ -71,7 +72,7 @@ export function LoginForm() {
         <div className="w-1/3 flex items-center justify-center border-r border-gray-300"></div>
         <div className="w-1/3 flex items-center justify-center border-r border-gray-300">
           <Link href="/">
-            <img src="/icons/home.svg" alt="ホーム" className="w-6 h-6 cursor-pointer" />
+            <Image src="/icons/home.svg" alt="ホーム" width={24} height={24} className="w-6 h-6 cursor-pointer" />
           </Link>
         </div>
         <div className="w-1/3 flex items-center justify-center"></div>
