@@ -6,6 +6,7 @@ import { motion } from 'framer-motion'
 import { Inter, Noto_Sans_JP } from 'next/font/google'
 import { recommendItems } from '@/lib/mockData' // ✅ 商品データインポート
 import Link from 'next/link'
+import Image from 'next/image'
 
 const inter = Inter({ weight: ['900'], subsets: ['latin'] })
 const notoSansJP = Noto_Sans_JP({ weight: ['400', '700'], subsets: ['latin'] })
@@ -164,17 +165,17 @@ export default function ReportPage() {
       <div className="fixed bottom-0 w-full flex bg-white shadow-inner h-20 z-60">
         <div className="w-1/3 flex items-center justify-center border-r border-gray-300">
           <Link href="/result">
-            <img src="/icons/back.svg" alt="戻る" className="w-6 h-6 cursor-pointer" />
+            <Image src="/icons/back.svg" alt="戻る" width={24} height={24} className="w-6 h-6 cursor-pointer" />
           </Link>
         </div>
         <div className="w-1/3 flex items-center justify-center border-r border-gray-300">
           <Link href="/">
-            <img src="/icons/home.svg" alt="ホーム" className="w-6 h-6 cursor-pointer" />
+            <Image src="/icons/home.svg" alt="ホーム" width={24} height={24} className="w-6 h-6 cursor-pointer" />
           </Link>
         </div>
         <div className="w-1/3 flex items-center justify-center">
           <Link href="/settings">
-            <img src="/icons/settings.svg" alt="設定" className="w-6 h-6 cursor-pointer" />
+            <Image src="/icons/settings.svg" alt="設定" width={24} height={24} className="w-6 h-6 cursor-pointer" />
           </Link>
         </div>
       </div>
