@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
 import { Inter, Noto_Sans_JP } from 'next/font/google'
 import { recommendItems } from '@/lib/mockData' // ✅ 商品データインポート
+import Link from 'next/link'
 
 const inter = Inter({ weight: ['900'], subsets: ['latin'] })
 const notoSansJP = Noto_Sans_JP({ weight: ['400', '700'], subsets: ['latin'] })
@@ -25,7 +26,6 @@ export default function ReportPage() {
       ]);
     }
   }, []);
-  
 
   const getAdvice = () => {
     if (!selectedConcern || selectedConditions.length === 0) return 'データが不足しています。'
@@ -49,7 +49,17 @@ export default function ReportPage() {
 
   const getRecommendedItem = () => {
     if (!selectedConcern) return null
-    return recommendItems[selectedConcern as 'skin' | 'top' | 'under']
+  
+    const concernKeyMap: Record<string, 'skin' | 'top' | 'under'> = {
+      '肌の状態': 'skin',
+      'ヘアセット': 'top',
+      'ヒゲ': 'under',
+    }
+  
+    const mappedKey = concernKeyMap[selectedConcern]
+    if (!mappedKey) return null
+  
+    return recommendItems[mappedKey]
   }
 
   const recommendedItem = getRecommendedItem()
@@ -59,8 +69,9 @@ export default function ReportPage() {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 1 }}
-      className={`flex flex-col items-center p-6 pt-24 pb-24 bg-gray-100 min-h-screen ${notoSansJP.className}`}
+      className={`flex flex-col items-center p-6 pt-24 pb-40 bg-gray-100 min-h-screen ${notoSansJP.className}`}
     >
+      {/* タイトル */}
       <div className="flex flex-col text-center mb-8">
         <h2 className={`${inter.className} text-5xl italic tracking-tight text-gray-800 border-b-2 border-gray-300 pb-1`}>
           FACE GAUGE
@@ -70,6 +81,7 @@ export default function ReportPage() {
         </span>
       </div>
 
+      {/* コンディションレポート */}
       <div className="text-center bg-gray-300 px-6 py-2 rounded shadow-md w-full max-w-md mb-8">
         <p className="text-2xl italic font-medium text-gray-700 tracking-tight leading-tight">
           - Condition Report -
@@ -118,6 +130,28 @@ export default function ReportPage() {
         </div>
       )}
 
+      {/* --- ✅ ここからクーポンエリア --- */}
+      <div className="text-center bg-gray-300 px-6 py-2 rounded shadow-md w-full max-w-md mt-12 mb-8">
+        <p className="text-2xl italic font-medium text-gray-700 tracking-tight leading-tight">
+          - Special Coupon! -
+        </p>
+      </div>
+      
+      <div className="bg-white border border-gray-400 rounded-xl p-6 mb-8 w-full max-w-md text-center shadow">
+        <h3 className="text-xl font-bold text-gray-600 mb-4">クーポンプレゼント！</h3>
+        <img
+          src="https://api.qrserver.com/v1/create-qr-code/?data=https%3A%2F%2Fwww.mandom.co.jp&size=200x200"
+          alt="クーポンQRコード"
+          className="w-48 h-48 object-contain mx-auto mb-4 rounded shadow"
+        />
+        <p className="text-gray-700 text-sm leading-relaxed">
+          コンディション入力ありがとうございました！<br />
+          QRコードを読み取ってクーポンを使いましょう！<br />
+          ※スクリーンショットしておくことをおすすめします。
+        </p>
+      </div>
+      {/* --- ✅ クーポンエリアここまで --- */}
+
       {/* 戻るボタン */}
       <button
         onClick={() => router.push('/')}
@@ -125,6 +159,27 @@ export default function ReportPage() {
       >
         ホームへ戻る
       </button>
+
+      {/* 下部ナビゲーションバー */}
+      <div className="fixed bottom-0 w-full flex bg-white shadow-inner h-20 z-60">
+        <div className="w-1/3 flex items-center justify-center border-r border-gray-300">
+          <Link href="/result">
+            <img src="/icons/back.svg" alt="戻る" className="w-6 h-6 cursor-pointer" />
+          </Link>
+        </div>
+        <div className="w-1/3 flex items-center justify-center border-r border-gray-300">
+          <Link href="/">
+            <img src="/icons/home.svg" alt="ホーム" className="w-6 h-6 cursor-pointer" />
+          </Link>
+        </div>
+        <div className="w-1/3 flex items-center justify-center">
+          <Link href="/settings">
+            <img src="/icons/settings.svg" alt="設定" className="w-6 h-6 cursor-pointer" />
+          </Link>
+        </div>
+      </div>
+
+
     </motion.div>
   )
 }

@@ -4,13 +4,14 @@ import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useRouter } from 'next/navigation'
 import { Inter, Noto_Sans_JP } from 'next/font/google'
+import Link from 'next/link'
 
 const inter = Inter({ weight: ['900'], subsets: ['latin'] })
 const notoSansJP = Noto_Sans_JP({ weight: ['400', '700'], subsets: ['latin'] })
 
 export default function CheckPage() {
   const router = useRouter()
-  const [step, setStep] = useState<'selectCategory' | 'selectDetails' | 'selectReason' | 'completed'>('selectCategory')
+  const [step, setStep] = useState<'selectCategory' | 'selectDetails' | 'selectReason'>('selectCategory')
   const [selectedCategory, setSelectedCategory] = useState('')
   const [selectedDetails, setSelectedDetails] = useState<string[]>([])
   const [selectedReasons, setSelectedReasons] = useState<string[]>([])
@@ -70,11 +71,17 @@ export default function CheckPage() {
     if (selectedReasons.length > 0) {
       const report = {
         category: selectedCategory,
-        details: [...selectedDetails, ...(selectedDetails.includes('その他') && otherDetailText ? [`その他: ${otherDetailText}`] : [])],
-        reasons: [...selectedReasons, ...(selectedReasons.includes('その他') && otherReasonText ? [`その他: ${otherReasonText}`] : [])],
+        details: [
+          ...selectedDetails.filter(d => d !== 'その他'),
+          ...(selectedDetails.includes('その他') && otherDetailText ? [`その他: ${otherDetailText}`] : []),
+        ],
+        reasons: [
+          ...selectedReasons.filter(r => r !== 'その他'),
+          ...(selectedReasons.includes('その他') && otherReasonText ? [`その他: ${otherReasonText}`] : []),
+        ],
       }
       localStorage.setItem('selfCheckReport', JSON.stringify(report))
-      setStep('completed')
+      router.push('/report')
     }
   }
 
@@ -83,12 +90,11 @@ export default function CheckPage() {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 1 }}
-      className={`flex flex-col items-center p-6 pt-24 pb-24 bg-gray-100 min-h-screen ${notoSansJP.className}`}
+      className={`flex flex-col items-center p-6 pt-24 pb-40 bg-gray-100 min-h-screen ${notoSansJP.className}`}
     >
       <AnimatePresence mode="wait">
         {step === 'selectCategory' && (
           <motion.div key="category" {...fadeAnimation} className="flex flex-col items-center w-full">
-            {/* - Self Check - */}
             <Header label="- Self Check -" />
             <p className="text-gray-700 mb-6 text-center">気になるポイントを選んでください</p>
             <ButtonList options={categories} onClick={handleSelectCategory} />
@@ -97,7 +103,6 @@ export default function CheckPage() {
 
         {step === 'selectDetails' && (
           <motion.div key="details" {...fadeAnimation} className="flex flex-col items-center w-full">
-            {/* - 詳細 - */}
             <Header label={`- ${selectedCategory} Check -`} />
             <p className="text-gray-700 mb-6 text-center">当てはまる項目を選んでください</p>
             <CheckboxList
@@ -113,7 +118,6 @@ export default function CheckPage() {
 
         {step === 'selectReason' && (
           <motion.div key="reason" {...fadeAnimation} className="flex flex-col items-center w-full">
-            {/* - 最近のコンディション - */}
             <Header label="- Condition -" />
             <p className="text-gray-700 mb-6 text-center">最近のコンディションを選んでください</p>
             <CheckboxList
@@ -126,41 +130,34 @@ export default function CheckPage() {
             <NextButton onClick={handleComplete} disabled={selectedReasons.length === 0} />
           </motion.div>
         )}
-
-        {step === 'completed' && (
-          <motion.div key="completed" {...fadeAnimation} className="flex flex-col items-center w-full">
-            {/* - Coupon - */}
-            <Header label="- Coupon -" />
-            <h2 className={`${inter.className} text-3xl italic tracking-tight text-gray-800 text-center mb-6`}>
-              クーポンをゲット！
-            </h2>
-            <img
-              src="https://api.qrserver.com/v1/create-qr-code/?data=https%3A%2F%2Fwww.mandom.co.jp&size=200x200"
-              alt="クーポンQRコード"
-              className="w-48 h-48 object-contain rounded shadow mb-4"
-            />
-            <p className="text-gray-700 text-center mb-8">
-            コンディション入力ありがとうございました！ <br /> QRコードを読み取ってクーポンを使いましょう！ <br /> ※スクショしておくことをおすすめします
-            </p>
-            {/* レポートを確認するボタン */}
-            <button
-              onClick={() => router.push('/report')}
-              className="bg-gray-700 hover:bg-gray-800 text-white px-8 py-3 rounded shadow text-lg transition"
-            >
-              レポートを確認
-            </button>
-          </motion.div>
-        )}
       </AnimatePresence>
+
+      {/* 下部ナビゲーションバー */}
+      <div className="fixed bottom-0 w-full flex bg-white shadow-inner h-20 z-50">
+        <div className="w-1/3 flex items-center justify-center border-r border-gray-300">
+          <Link href="/result">
+            <img src="/icons/back.svg" alt="戻る" className="w-6 h-6 cursor-pointer" />
+          </Link>
+        </div>
+        <div className="w-1/3 flex items-center justify-center border-r border-gray-300">
+          <Link href="/">
+            <img src="/icons/home.svg" alt="ホーム" className="w-6 h-6 cursor-pointer" />
+          </Link>
+        </div>
+        <div className="w-1/3 flex items-center justify-center">
+          <Link href="/settings">
+            <img src="/icons/settings.svg" alt="設定" className="w-6 h-6 cursor-pointer" />
+          </Link>
+        </div>
+      </div>
+
     </motion.div>
   )
 }
 
 const Header = ({ label }: { label: string }) => (
   <div className="text-center bg-gray-300 px-6 py-2 rounded shadow-md w-full max-w-md mb-10">
-    <p className="text-2xl italic font-medium text-gray-700 tracking-tight leading-tight">
-      {label}
-    </p>
+    <p className="text-2xl italic font-medium text-gray-700 tracking-tight leading-tight">{label}</p>
   </div>
 )
 

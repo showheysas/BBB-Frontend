@@ -107,3 +107,18 @@ export const generateRandomFaceScore = () => {
     recommendItem: recommendItems[recommendType]
   };
 };
+
+export const userInfo = {
+  name: "kiriyama",
+  email: "kiriyama_ren@example.com",
+  password: "ren", // セキュリティ的には本番で表示しない
+  createdAt: "2024-01-10",
+  lastLoginAt: "2025-04-05",
+}
+
+export const reportHistory = [
+  { id: 1, title: "レポート1", date: "2025-03-01" },
+  { id: 2, title: "レポート2", date: "2025-03-15" },
+  { id: 3, title: "レポート3", date: "2025-04-01" },
+]
+
