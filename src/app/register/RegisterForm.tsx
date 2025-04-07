@@ -48,7 +48,7 @@ export function RegisterForm() {
       transition={{ duration: 1 }}
       className={`flex flex-col items-center justify-center min-h-screen bg-gray-100 p-6 ${notoSansJP.className}`}
     >
-      <div className="bg-white p-8 rounded shadow-md w-full max-w-md">
+      <div className="bg-white p-8 rounded shadow-md w-full max-w-md mb-8">
         <h2 className={`${inter.className} text-3xl font-bold text-center text-gray-800 mb-6`}>
           新規登録
         </h2>
@@ -70,6 +70,13 @@ export function RegisterForm() {
                 required
                 className="border border-gray-300 rounded-md p-3 w-full bg-white text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-700"
               />
+
+              {/* 生年月日のみ注意書きを表示 */}
+              {field === 'birthday' && (
+                <p className="text-xs text-gray-500 mt-1">
+                  　生年月日はあとから変更できませんので、ご注意ください
+                </p>
+              )}
             </div>
           ))}
 
@@ -98,6 +105,11 @@ export function RegisterForm() {
           </span>
         </p>
       </div>
+
+      <p className="text-gray-700 text-sm leading-relaxed">
+        ※MVP用のダミーページです。<br />
+        「登録」してもDBには保存されず、ユーザーのデバイスのキャッシュにのみ残ります。
+      </p>
     </motion.div>
   )
 }

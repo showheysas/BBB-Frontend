@@ -99,6 +99,10 @@ export default function ResultPage() {
       {/* 撮影画像 */}
       <Image src="/kiriyama.png" alt="Captured" width={256} height={256} className="rounded shadow mb-8" />
 
+      <p className="text-gray-700 text-sm leading-relaxed mb-8">
+          ※画像はMVP用のダミーです。<br />　実際には、撮影画像から顔部分のみクロッピングした画像が表示されます。<br />　また、MVPではスコアはランダムに生成されています。
+        </p>
+
       {/* 撮り直し・測定するボタン */}
       {!showResult && (
         <div className="flex gap-6 mb-8">

@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
 import { Inter, Noto_Sans_JP } from 'next/font/google'
-import { recommendItems } from '@/lib/mockData' // ✅ 商品データインポート
+import { recommendItems } from '@/lib/mockData'
 import Link from 'next/link'
 import Image from 'next/image'
 
@@ -15,18 +15,35 @@ export default function ReportPage() {
   const router = useRouter()
   const [selectedConcern, setSelectedConcern] = useState<string | null>(null)
   const [selectedConditions, setSelectedConditions] = useState<string[]>([])
+  const [currentTime, setCurrentTime] = useState<string | null>(null)
+  const [username, setUsername] = useState('ゲスト')
 
   useEffect(() => {
-    const savedData = localStorage.getItem('selfCheckReport');
+    const savedData = localStorage.getItem('selfCheckReport')
     if (savedData) {
-      const parsedData = JSON.parse(savedData);
-      setSelectedConcern(parsedData.category || null);
+      const parsedData = JSON.parse(savedData)
+      setSelectedConcern(parsedData.category || null)
       setSelectedConditions([
         ...(parsedData.details || []),
         ...(parsedData.reasons || [])
-      ]);
+      ])
     }
-  }, []);
+
+    // 日時とユーザー名をセット
+    const now = new Date()
+    const formattedTime = now.toLocaleString('ja-JP', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit'
+    })
+    setCurrentTime(formattedTime)
+
+    const storedUsername = localStorage.getItem('username') || 'ゲスト'
+    setUsername(storedUsername)
+  }, [])
 
   const getAdvice = () => {
     if (!selectedConcern || selectedConditions.length === 0) return 'データが不足しています。'
@@ -83,10 +100,16 @@ export default function ReportPage() {
       </div>
 
       {/* コンディションレポート */}
-      <div className="text-center bg-gray-300 px-6 py-2 rounded shadow-md w-full max-w-md mb-8">
+      <div className="text-center bg-gray-300 px-6 py-2 rounded shadow-md w-full max-w-md mb-4">
         <p className="text-2xl italic font-medium text-gray-700 tracking-tight leading-tight">
           - Condition Report -
         </p>
+      </div>
+
+      {/* 日時・ユーザー名 */}
+      <div className="mb-8 text-center">
+        <p className="text-gray-700">{currentTime}</p>
+        <p className="text-lg font-bold text-gray-800">{username} さん</p>
       </div>
 
       {/* 選んだ内容まとめ */}
@@ -131,13 +154,38 @@ export default function ReportPage() {
         </div>
       )}
 
-      {/* --- ✅ ここからクーポンエリア --- */}
+      
+      {/* Oops紹介エリア */}
+      <div className="bg-white border border-gray-400 rounded-xl p-6 mb-8 w-full max-w-md text-center shadow">
+        <h3 className="text-lg font-bold text-gray-800 mb-4">
+          もしお悩みのことがあるなら...
+        </h3>
+        <p className="text-gray-700 mb-4">
+          「いろんな診療、ぜんぶオンラインで」できる、<br />”Oops（ウープス）”をご紹介します
+        </p>
+        <Image
+          src="/images/oops-logo.webp" // ✅ ドメイン許可不要
+          alt="Oops紹介"
+          width={600}
+          height={210}
+        />
+        <a
+          href="https://oops-jp.com/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-block bg-gray-300 hover:bg-gray-400 text-gray-700 font-semibold px-4 py-2 rounded shadow transition"
+        >
+          オンライン診療サービス ”Oops（ウープス）”<br />はこちら
+        </a>
+      </div>
+
+      {/* クーポンエリア */}
       <div className="text-center bg-gray-300 px-6 py-2 rounded shadow-md w-full max-w-md mt-12 mb-8">
         <p className="text-2xl italic font-medium text-gray-700 tracking-tight leading-tight">
           - Special Coupon! -
         </p>
       </div>
-      
+
       <div className="bg-white border border-gray-400 rounded-xl p-6 mb-8 w-full max-w-md text-center shadow">
         <h3 className="text-xl font-bold text-gray-600 mb-4">クーポンプレゼント！</h3>
         <img
@@ -148,10 +196,10 @@ export default function ReportPage() {
         <p className="text-gray-700 text-sm leading-relaxed">
           コンディション入力ありがとうございました！<br />
           QRコードを読み取ってクーポンを使いましょう！<br />
-          ※スクリーンショットしておくことをおすすめします。
+          スクリーンショットしておくことをおすすめします。<br /><br />
+          ※QRコードは、MVP用のダミーです。
         </p>
       </div>
-      {/* --- ✅ クーポンエリアここまで --- */}
 
       {/* 戻るボタン */}
       <button
@@ -179,8 +227,6 @@ export default function ReportPage() {
           </Link>
         </div>
       </div>
-
-
     </motion.div>
   )
 }

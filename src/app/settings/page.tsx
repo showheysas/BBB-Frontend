@@ -34,15 +34,27 @@ export default function SettingsPage() {
                 <p className="text-black">{key}</p>
                 <p className="font-semibold text-black">{value}</p>
               </div>
-              <button
-                onClick={() => handleChange(key as keyof typeof userInfo)}
-                className="text-blue-600 hover:underline"
-              >
-                変更する
-              </button>
+              {/* 生年月日以外に「変更する」ボタンを表示 */}
+              {key !== 'birthDate' && (
+                <button
+                  onClick={() => handleChange(key as keyof typeof userInfo)}
+                  className="text-blue-600 hover:underline"
+                >
+                  変更する
+                </button>
+              )}
             </div>
           )
         ))}
+
+        {/* 生年月日（固定表示） */}
+        <div className="flex justify-between items-center">
+          <div>
+            <p className="text-black">生年月日</p>
+            <p className="font-semibold text-black">1990-04-16</p>
+          </div>
+          {/* 変更するボタンなし */}
+        </div>
       </div>
 
       {/* 登録・ログイン情報 */}
@@ -65,6 +77,10 @@ export default function SettingsPage() {
         </ul>
       </div>
 
+      <p className="text-gray-700 text-sm leading-relaxed mt-8">
+        ※MVP用のダミーデータです。「変更」しても反映されません。<br />　また、レポート履歴のリンクは機能していません。
+      </p>
+
       {/* 戻るボタン */}
       <button
         onClick={() => router.push('/')}
@@ -76,7 +92,7 @@ export default function SettingsPage() {
       {/* 下部ナビゲーションバー */}
       <div className="fixed bottom-0 w-full flex bg-white shadow-inner h-20 z-50">
         <div className="w-1/3 flex items-center justify-center border-r border-gray-300">
-          {/* ここ空でもOK（戻るボタンは上にあるから） */}
+          {/* 空 */}
         </div>
         <div className="w-1/3 flex items-center justify-center border-r border-gray-300">
           <Link href="/">

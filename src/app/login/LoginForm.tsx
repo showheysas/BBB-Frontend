@@ -53,6 +53,10 @@ export function LoginForm() {
           ログイン
         </button>
 
+        <p className="text-gray-700 text-sm leading-relaxed mb-8">
+          ※MVPでは、ユーザー名：kiriyama、PW：ren<br />　でログインしてください。
+        </p>
+
         <p className="text-gray-700 text-center text-sm">もしくは</p>
 
         <button
