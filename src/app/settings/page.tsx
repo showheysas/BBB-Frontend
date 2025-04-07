@@ -4,6 +4,7 @@ import { useState } from "react"
 import { userInfo, reportHistory } from '@/lib/mockData'
 import Link from "next/link"
 import { useRouter } from 'next/navigation'
+import Image from 'next/image'
 
 export default function SettingsPage() {
   const [user, setUser] = useState(userInfo)
@@ -79,12 +80,12 @@ export default function SettingsPage() {
         </div>
         <div className="w-1/3 flex items-center justify-center border-r border-gray-300">
           <Link href="/">
-            <img src="/icons/home.svg" alt="ホーム" className="w-6 h-6 cursor-pointer" />
+            <Image src="/icons/home.svg" alt="ホーム" width={24} height={24} className="w-6 h-6 cursor-pointer" />
           </Link>
         </div>
         <div className="w-1/3 flex items-center justify-center">
           <Link href="/settings">
-            <img src="/icons/settings.svg" alt="設定" className="w-6 h-6 cursor-pointer" />
+            <Image src="/icons/settings.svg" alt="設定" width={24} height={24} className="w-6 h-6 cursor-pointer" />
           </Link>
         </div>
       </div>
