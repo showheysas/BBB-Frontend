@@ -164,7 +164,7 @@ export default function ReportPage() {
           「いろんな診療、ぜんぶオンラインで」できる、<br />”Oops（ウープス）”をご紹介します
         </p>
         <Image
-          src="/images/oops-logo.jpg" // ✅ ドメイン許可不要
+          src="/oops-logo.png" // ✅ ドメイン許可不要
           alt="Oops紹介"
           width={600}
           height={210}

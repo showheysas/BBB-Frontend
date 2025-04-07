@@ -48,7 +48,7 @@ export function RegisterForm() {
       transition={{ duration: 1 }}
       className={`flex flex-col items-center justify-center min-h-screen bg-gray-100 p-6 ${notoSansJP.className}`}
     >
-      <div className="bg-white p-8 rounded shadow-md w-full max-w-md mb-8">
+      <div className="bg-white p-8 rounded shadow-md w-full max-w-md mb-8 mt-12">
         <h2 className={`${inter.className} text-3xl font-bold text-center text-gray-800 mb-6`}>
           新規登録
         </h2>
