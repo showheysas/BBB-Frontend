@@ -163,12 +163,13 @@ export default function ReportPage() {
         <p className="text-gray-700 mb-4">
           「いろんな診療、ぜんぶオンラインで」できる、<br />”Oops（ウープス）”をご紹介します
         </p>
-        <Image
+        <Image src="/oops.jpg" alt="Oopsロゴ" width={300} height={105} className="mb-8 mx-auto" />
+        {/* <Image
           src="/oops-logo.png" // ✅ ドメイン許可不要
           alt="Oops紹介"
           width={600}
           height={210}
-        />
+        /> */}
         <a
           href="https://oops-jp.com/"
           target="_blank"
