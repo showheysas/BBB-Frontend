@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState, useRef } from "react"
-import { nets, detectAllFaces, TinyFaceDetectorOptions } from "face-api.js"
+import { nets, detectSingleFace, TinyFaceDetectorOptions } from "face-api.js"
 import { useRouter } from "next/navigation"
 import { motion } from "framer-motion"
 import { Inter, Noto_Sans_JP } from 'next/font/google'
@@ -48,12 +48,12 @@ export default function CameraPage() {
     if (!videoRef.current) return
 
     const interval = setInterval(async () => {
-      const detections = await detectAllFaces(
+      const detection = await detectSingleFace(
         videoRef.current!,
         new TinyFaceDetectorOptions()
       )
 
-      if (detections.length > 0 && !captured) {  // ✅ 撮影済みだったら反応しない
+      if (detection && !captured) {
         clearInterval(interval)
         startCountdownAndCapture()
       }
@@ -77,7 +77,7 @@ export default function CameraPage() {
     }, 1000)
   }
 
-  const capturePhoto = () => {
+  const capturePhoto = async () => {
     const canvas = canvasRef.current
     const video = videoRef.current
     if (canvas && video) {
@@ -85,6 +85,39 @@ export default function CameraPage() {
       canvas.height = video.videoHeight
       const ctx = canvas.getContext("2d")
       ctx?.drawImage(video, 0, 0)
+
+      const detection = await detectSingleFace(canvas, new TinyFaceDetectorOptions())
+      if (detection) {
+        const { x, y, width, height } = detection.box
+
+        // ここでマージンを追加する
+        const marginTop = height * 0.4
+        const marginBottom = height * 0.2
+        const marginSide = width * 0.2
+
+        const imgWidth = canvas.width
+        const imgHeight = canvas.height
+
+        const newX = Math.max(0, x - marginSide)
+        const newY = Math.max(0, y - marginTop)
+        const newWidth = Math.min(imgWidth - newX, width + marginSide * 2)
+        const newHeight = Math.min(imgHeight - newY, height + marginTop + marginBottom)
+
+        // クロップしてリサイズ
+        const croppedCanvas = document.createElement('canvas')
+        const croppedCtx = croppedCanvas.getContext('2d')
+        croppedCanvas.width = 128
+        croppedCanvas.height = 128
+
+        croppedCtx?.drawImage(
+          canvas,
+          newX, newY, newWidth, newHeight, // 元画像のクロップ範囲
+          0, 0, 128, 128                   // 出力先（リサイズ後）
+        )
+
+        const croppedDataUrl = croppedCanvas.toDataURL('image/jpeg')
+        localStorage.setItem('capturedFace', croppedDataUrl)
+      }
 
       // ✅ シャッターエフェクト
       setShowShutter(true)

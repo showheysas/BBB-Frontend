@@ -19,6 +19,7 @@ export default function ResultPage() {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [username, setUsername] = useState('ゲスト')
   const [faceScore, setFaceScore] = useState(generateRandomFaceScore())
+  const [capturedFace, setCapturedFace] = useState<string | null>(null)
 
   useEffect(() => {
     const checkAuth = () => {
@@ -31,6 +32,13 @@ export default function ResultPage() {
     checkAuth()
     window.addEventListener('focus', checkAuth)
     return () => window.removeEventListener('focus', checkAuth)
+  }, [])
+
+  useEffect(() => {
+    const captured = localStorage.getItem('capturedFace')
+    if (captured) {
+      setCapturedFace(captured)
+    }
   }, [])
 
   const handleMeasureClick = () => {
@@ -97,11 +105,17 @@ export default function ResultPage() {
       </div>
 
       {/* 撮影画像 */}
-      <Image src="/kiriyama.png" alt="Captured" width={256} height={256} className="rounded shadow mb-8" />
-
-      <p className="text-gray-700 text-sm leading-relaxed mb-8">
-          ※画像はMVP用のダミーです。<br />　実際には、撮影画像から顔部分のみクロッピングした画像が表示されます。<br />　また、MVPではスコアはランダムに生成されています。
-        </p>
+      {capturedFace ? (
+        <img
+          src={capturedFace}
+          alt="Captured Face"
+          width={256}
+          height={256}
+          className="rounded shadow mb-8 object-cover"
+        />
+      ) : (
+        <p className="text-red-500 text-center mb-8">撮影エラー</p>
+      )}
 
       {/* 撮り直し・測定するボタン */}
       {!showResult && (
