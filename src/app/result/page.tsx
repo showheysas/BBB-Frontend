@@ -3,6 +3,7 @@
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer } from 'recharts'
+import { PolarAngleAxisProps } from 'recharts/types/polar/PolarAngleAxis'
 import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
 import { Inter, Noto_Sans_JP } from 'next/font/google'
@@ -16,8 +17,8 @@ const notoSansJP = Noto_Sans_JP({ weight: ['400', '700'], subsets: ['latin'] })
 export default function ResultPage() {
   const router = useRouter()
   const searchParams = useSearchParams()
-  const searchTransactionId = searchParams.get('transaction_id')
-  const storedTransactionId = typeof window !== 'undefined' ? localStorage.getItem('transaction_id') : null //なければ localStorage から読む
+  //const searchTransactionId = searchParams.get('transaction_id')
+  //const storedTransactionId = typeof window !== 'undefined' ? localStorage.getItem('transaction_id') : null //なければ localStorage から読む
 
   const [mode, setMode] = useState<'local' | 'backend' | null>(null)
 
@@ -218,17 +219,28 @@ export default function ResultPage() {
     { key: 'under', subject: 'アンダー\nフェイス', fullMark: 10 },
   ]
 
-  const renderTwoLineLabel = (props: any) => {
-    const { payload, x, y, textAnchor } = props
-    const lines = payload.value.split('\n')
+  type RenderTickProps = {
+    payload: {
+      value: string;
+    };
+    x: number;
+    y: number;
+    textAnchor: string;
+  };
+
+  const renderTwoLineLabel = (props: RenderTickProps) => {
+    const { payload, x, y, textAnchor } = props;
+    const lines = payload.value.split('\n');
     return (
       <text x={x} y={y} textAnchor={textAnchor} fill="#666" fontSize="16">
-        {lines.map((line: string, index: number) => (
-          <tspan key={index} x={x} dy={index === 0 ? 0 : 16}>{line}</tspan>
+        {lines.map((line, index) => (
+          <tspan key={index} x={x} dy={index === 0 ? 0 : 16}>
+            {line}
+          </tspan>
         ))}
       </text>
-    )
-  }
+    );
+  };
 
   return (
     <motion.div
@@ -286,7 +298,13 @@ export default function ResultPage() {
             {/* レーダーチャート */}
             <div className="w-full max-w-md mb-8">
               <ResponsiveContainer width="100%" height={300}>
-                <RadarChart data={fixedInfo.map(item => ({ subject: item.subject, score: (faceScore as any)[item.key].score, fullMark: item.fullMark }))} outerRadius="80%">
+              <RadarChart
+                data={fixedInfo.map(item => ({
+                  subject: item.subject,
+                  score: (faceScore as FaceScoreType)[item.key].score,
+                  fullMark: item.fullMark
+                }))}
+              >
                   <PolarGrid stroke="#ccc" />
                   <PolarAngleAxis dataKey="subject" tick={renderTwoLineLabel} />
                   <PolarRadiusAxis domain={[0, 10]} tick={false} axisLine={false} />

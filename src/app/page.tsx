@@ -39,17 +39,17 @@ export default function StartPage() {
     }
   }, [])
 
-  useEffect(() => {
-    const handleScroll = () => {
-      const scrollTop = window.scrollY
-      const docHeight = document.body.scrollHeight - window.innerHeight
-      const scrolled = (scrollTop / docHeight) * 100
-      //setScrollPercent(scrolled)
-    }
+  // useEffect(() => {
+  //   const handleScroll = () => {
+  //     const scrollTop = window.scrollY
+  //     const docHeight = document.body.scrollHeight - window.innerHeight
+  //     const scrolled = (scrollTop / docHeight) * 100
+  //     setScrollPercent(scrolled)
+  //   }
 
-    window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
+  //   window.addEventListener('scroll', handleScroll)
+  //   return () => window.removeEventListener('scroll', handleScroll)
+  // }, [])
 
   return (
     <motion.div
