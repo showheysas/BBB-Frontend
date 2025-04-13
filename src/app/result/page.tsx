@@ -3,7 +3,7 @@
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer } from 'recharts'
-import { PolarAngleAxisProps } from 'recharts/types/polar/PolarAngleAxis'
+//import { PolarAngleAxisProps } from 'recharts/types/polar/PolarAngleAxis'
 import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
 import { Inter, Noto_Sans_JP } from 'next/font/google'
