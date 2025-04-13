@@ -13,7 +13,7 @@ const notoSansJP = Noto_Sans_JP({ weight: ['400', '700'], subsets: ['latin'] })
 export default function StartPage() {
   const router = useRouter()
   const [username, setUsername] = useState<string>('ゲストさん')
-  const [scrollPercent, setScrollPercent] = useState(0)
+  // const [scrollPercent, setScrollPercent] = useState(0)
   const [modeSelected, setModeSelected] = useState<boolean>(false) //セレクトモード
 
   // 初回でモードが選択済みか確認
@@ -44,7 +44,7 @@ export default function StartPage() {
       const scrollTop = window.scrollY
       const docHeight = document.body.scrollHeight - window.innerHeight
       const scrolled = (scrollTop / docHeight) * 100
-      setScrollPercent(scrolled)
+      //setScrollPercent(scrolled)
     }
 
     window.addEventListener('scroll', handleScroll)

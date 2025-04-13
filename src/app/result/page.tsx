@@ -212,7 +212,7 @@ export default function ResultPage() {
     }
   }
 
-  const fixedInfo = [
+  const fixedInfo: { key: keyof Pick<FaceScoreType, 'skin' | 'top' | 'under'>; subject: string; fullMark: number }[] = [
     { key: 'skin', subject: 'スキンコンディション', fullMark: 10 },
     { key: 'top', subject: 'トップ\nフェイス', fullMark: 10 },
     { key: 'under', subject: 'アンダー\nフェイス', fullMark: 10 },
