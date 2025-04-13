@@ -17,10 +17,14 @@ export default function CameraPage() {
   const [isCountingDown, setIsCountingDown] = useState(false)
   const [stream, setStream] = useState<MediaStream | null>(null)
   const [showShutter, setShowShutter] = useState(false)
-  const [captured, setCaptured] = useState(false) // ✅ 撮影完了したかどうか
+  const [captured, setCaptured] = useState(false)
   const router = useRouter()
+  const [mode, setMode] = useState<'local' | 'backend' | null>(null)
 
   useEffect(() => {
+    const savedMode = localStorage.getItem('mode') as 'local' | 'backend' | null;
+    setMode(savedMode);
+
     const startCamera = async () => {
       const mediaStream = await navigator.mediaDevices.getUserMedia({ video: true })
       if (videoRef.current) {
@@ -33,13 +37,18 @@ export default function CameraPage() {
       await nets.tinyFaceDetector.loadFromUri("/models/tiny_face_detector")
     }
 
-    loadModels()
-    startCamera()
-    detectFace()
+    const setup = async () => {
+      await loadModels()
+      await startCamera()
+      detectFace()
+    }
+
+    setup()
 
     return () => {
-      if (stream) {
-        stream.getTracks().forEach(track => track.stop())
+      if (videoRef.current && videoRef.current.srcObject) {
+        const currentStream = videoRef.current.srcObject as MediaStream
+        currentStream.getTracks().forEach(track => track.stop())
       }
     }
   }, [])
@@ -88,81 +97,169 @@ export default function CameraPage() {
 
       const detection = await detectSingleFace(canvas, new TinyFaceDetectorOptions())
       if (detection) {
-        const { x, y, width, height } = detection.box
+        // クロッピング用に追加
+        const { x, y, width, height } = detection.box;
 
-        // ここでマージンを追加する
-        const marginTop = height * 0.4
-        const marginBottom = height * 0.2
-        const marginSide = width * 0.2
+        // 🔥 クロップ＆リサイズして保存
+        const marginTop = height * 0.4;
+        const marginBottom = height * 0.2;
+        const marginSide = width * 0.2;
 
-        const imgWidth = canvas.width
-        const imgHeight = canvas.height
+        const imgWidth = canvas.width;
+        const imgHeight = canvas.height;
 
-        const newX = Math.max(0, x - marginSide)
-        const newY = Math.max(0, y - marginTop)
-        const newWidth = Math.min(imgWidth - newX, width + marginSide * 2)
-        const newHeight = Math.min(imgHeight - newY, height + marginTop + marginBottom)
+        const newX = Math.max(0, x - marginSide);
+        const newY = Math.max(0, y - marginTop);
+        const newWidth = Math.min(imgWidth - newX, width + marginSide * 2);
+        const newHeight = Math.min(imgHeight - newY, height + marginTop + marginBottom);
 
-        // クロップしてリサイズ
-        const croppedCanvas = document.createElement('canvas')
-        const croppedCtx = croppedCanvas.getContext('2d')
-        croppedCanvas.width = 128
-        croppedCanvas.height = 128
+        const croppedCanvas = document.createElement('canvas');
+        const croppedCtx = croppedCanvas.getContext('2d');
+        croppedCanvas.width = 128;
+        croppedCanvas.height = 128;
 
         croppedCtx?.drawImage(
           canvas,
-          newX, newY, newWidth, newHeight, // 元画像のクロップ範囲
-          0, 0, 128, 128                   // 出力先（リサイズ後）
-        )
+          newX, newY, newWidth, newHeight,
+          0, 0, 128, 128
+        );
 
-        const croppedDataUrl = croppedCanvas.toDataURL('image/jpeg')
-        localStorage.setItem('capturedFace', croppedDataUrl)
+        const croppedDataUrl = croppedCanvas.toDataURL('image/jpeg');
+        localStorage.setItem('capturedFace', croppedDataUrl);
       }
 
-      // ✅ シャッターエフェクト
+
+      // 顔検出できたらシャッター
       setShowShutter(true)
       setTimeout(() => setShowShutter(false), 300)
 
-      // ✅ カメラOFFにする
-      if (video && video.srcObject) {
+      // カメラストップ
+      if (video.srcObject) {
         const currentStream = video.srcObject as MediaStream
         currentStream.getTracks().forEach(track => track.stop())
       }
-      
 
-      setCaptured(true) // ✅ 撮影済みに設定
+      setCaptured(true)
 
-      // ✅ 本来はサーバーに送信
-      // sendToBackend(canvas.toDataURL("image/jpeg"))
+      const currentMode = localStorage.getItem('mode')
 
-      // ✅ 代わりにローカルで保存 → /result に遷移する
-      setTimeout(() => {
-        router.push('/result')
-      }, 1000)
+      // 🔥 ここで分岐
+      if (currentMode === 'local') {
+        console.log("ローカルモード：ローカル結果へ遷移");
+        setTimeout(() => {
+          router.push('/result');
+        }, 1000);
+      } else if (currentMode === 'backend') {
+        console.log("バックエンドモード：サーバーに送信");
+        sendToBackend(canvas.toDataURL('image/jpeg'), router);
+      } else {
+        alert('モードが選択されていません');
+      }
     }
   }
 
-  // ✅ 元のバックエンド送信コード（コメントアウトして保存）
-  /*
-  const sendToBackend = async (dataUrl: string) => {
-    const blob = await (await fetch(dataUrl)).blob()
-    const formData = new FormData()
-    formData.append("file", blob, "photo.jpg")
+  // const sendToBackend = async (dataUrl: string) => {
+  //   const blob = await (await fetch(dataUrl)).blob()
+  //   const formData = new FormData()
+  //   formData.append("file", blob, "photo.jpg")
 
-    const res = await fetch("http://localhost:8000/upload", {
-      method: "POST",
-      body: formData,
-    })
+  //   try {
+  //     const token = localStorage.getItem("token")
 
-    if (res.ok) {
-      const result = await res.json()
-      const filename = result.filename
-      router.push(`/result?img=${filename}`)
-    } else {
-      alert("送信失敗")
+  //     const res = await fetch("https://branding-ngrok-app.jp.ngrok.io/upload", {
+  //       method: "POST",
+  //       headers: {
+  //         Authorization: `Bearer ${token}`, // ← ここはバッククオート！
+  //       },
+  //       body: formData,
+  //     })
+
+  //     if (!res.ok) {
+  //       const clonedResponse = res.clone()
+  //       const errorData = await clonedResponse.json()
+  //       console.error("送信失敗:", errorData)
+  //       alert(`送信失敗: ${errorData.detail || "不明なエラー"}`)
+  //       return
+  //     }
+
+  //     const result = await res.json()
+  //     console.log("サーバーからのレスポンス:", result)
+
+  //     localStorage.setItem("transaction_id", result.transaction_id)
+  //     router.push(`/result?transaction_id=${result.transaction_id}`)
+  //   } catch (error) {
+  //     console.error("通信エラー:", error)
+  //     alert("通信エラーが発生しました")
+  //   }
+  // }
+
+  const sendToBackend = async (dataUrl: string, router: ReturnType<typeof useRouter>) => {
+    const blob = await (await fetch(dataUrl)).blob();
+    const formData = new FormData();
+    formData.append("file", blob, "photo.jpg");
+  
+    try {
+      let token = localStorage.getItem("token");
+  
+      // 🔥 もしトークンがなかったら、9999guestでログインして取得する
+      if (!token) {
+        console.log("未ログインのためゲストログインを開始します");
+  
+        const loginRes = await fetch("https://branding-ngrok-app.jp.ngrok.io/auth/login", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            user_id: "9999guest",
+            password: "9999",
+          }),
+        });
+  
+        if (!loginRes.ok) {
+          const errorData = await loginRes.json();
+          console.error("ゲストログイン失敗:", errorData);
+          alert(`ゲストログイン失敗: ${errorData.detail || "不明なエラー"}`);
+          return;
+        }
+  
+        const loginData = await loginRes.json();
+        token = loginData.access_token;
+        localStorage.setItem("token", token || "");// 🔥 トークン保存
+        localStorage.setItem("username", "9999guest");
+        window.dispatchEvent(new Event("authChanged")); // オプション: 認証更新イベント
+      }
+  
+      // 🔥 ここから画像アップロード
+      const headers: HeadersInit = {
+        Authorization: `Bearer ${token}`,
+      };
+  
+      const res = await fetch("https://branding-ngrok-app.jp.ngrok.io/upload", {
+        method: "POST",
+        headers,
+        body: formData,
+      });
+  
+      if (!res.ok) {
+        const clonedResponse = res.clone();
+        const errorData = await clonedResponse.json();
+        console.error("送信失敗:", errorData);
+        alert(`送信失敗: ${errorData.detail || "不明なエラー"}`);
+        return;
+      }
+  
+      const result = await res.json();
+      console.log("サーバーからのレスポンス:", result);
+  
+      localStorage.setItem("transaction_id", result.transaction_id);
+      router.push(`/result?transaction_id=${result.transaction_id}`);
+    } catch (error) {
+      console.error("通信エラー:", error);
+      alert("通信エラーが発生しました");
     }
-  }
-  */
+  };
+  
 
   return (
     <motion.div
@@ -188,7 +285,6 @@ export default function CameraPage() {
           style={{ objectFit: "contain" }}
         />
 
-        {/* カウントダウンは映像の中央に */}
         {isCountingDown && countdown !== null && (
           <motion.div
             key={countdown}
@@ -203,7 +299,9 @@ export default function CameraPage() {
         )}
       </div>
 
-      <p className="text-xl text-gray-800 text-center mt-8">画面の中にあなたの顔を入れてください<br />カウントダウンのあと自動で撮影します</p>
+      <p className="text-xl text-gray-800 text-center mt-8">
+        画面の中にあなたの顔を入れてください<br />カウントダウンのあと自動で撮影します
+      </p>
 
       {/* シャッターエフェクト */}
       {showShutter && (
@@ -230,7 +328,6 @@ export default function CameraPage() {
           </Link>
         </div>
       </div>
-
     </motion.div>
   )
 }

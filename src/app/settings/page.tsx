@@ -77,7 +77,7 @@ export default function SettingsPage() {
         </ul>
       </div>
 
-      <p className="text-gray-700 text-sm leading-relaxed mt-8">
+      <p className="text-red-400 text-sm leading-relaxed mt-8">
         ※MVP用のダミーデータです。「変更」しても反映されません。<br />　また、レポート履歴のリンクは機能していません。
       </p>
 

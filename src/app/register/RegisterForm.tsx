@@ -106,7 +106,7 @@ export function RegisterForm() {
         </p>
       </div>
 
-      <p className="text-gray-700 text-sm leading-relaxed">
+      <p className="text-red-400 text-sm leading-relaxed">
         ※MVP用のダミーページです。<br />
         「登録」してもDBには保存されず、ユーザーのデバイスのキャッシュにのみ残ります。
       </p>

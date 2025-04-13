@@ -1,28 +1,28 @@
 // src/lib/mockData.ts
 
 // スコアごとのコメントリスト
-const skinComments: Record<number, string[]> = {
+export const skinComments: Record<number, string[]> = {
   10: ['肌のコンディションは最高！', 'ツヤがあり、乾燥も油分もなし！', '理想的なスキンコンディション！'],
   9: ['肌の調子がとてもいいですね。', '乾燥・テカリもほぼ気になりません。', '安定した肌状態をキープしています。'],
   8: ['やや乾燥気味ですが良好です。', 'テカリが少し気になるかも？', 'おおむね良い肌状態です。'],
   7: ['乾燥またはオイリー傾向あり。', '肌の調子を整えたいところです。', '保湿ケアを意識しましょう。'],
 };
 
-const topComments: Record<number, string[]> = {
+export const topComments: Record<number, string[]> = {
   10: ['髪型バッチリ決まってます！', 'サイド・トップのバランス最高！', 'セット完璧です。'],
   9: ['ほぼ完璧なスタイリングです。', '若干サイドが重いかも？', 'まとまりが良いですね。'],
   8: ['少しサイドが伸びすぎかも？', 'セットにもうひと工夫を。', 'スタイルは概ね良好です。'],
   7: ['全体のバランスに注意が必要です。', 'ヘアセットを整え直しましょう。', 'トップにボリュームを。'],
 };
 
-const underComments: Record<number, string[]> = {
+export const underComments: Record<number, string[]> = {
   10: ['ひげ剃り完璧！清潔感抜群です。', '無精ひげゼロ！爽やかです。', 'ひげの手入れが行き届いています。'],
   9: ['ほぼキレイに剃れています。', 'わずかな青ひげあり？', '細かい剃り残しに注意。'],
   8: ['やや青ひげが目立つかも。', '剃り残しが気になる箇所あり。', 'もう一度剃るとより爽やかに。'],
   7: ['無精ひげが少し目立つかも。', '全体的に剃り直しをおすすめ。', '清潔感を意識しましょう。'],
 };
 
-const totalComments: Record<number, string[]> = {
+export const totalComments: Record<number, string[]> = {
   100: ['完璧な爽やかさ！', '清潔感パーフェクト！', '誰からも好印象！'],
   90: ['非常に爽やかな印象です。', '好印象を与えています。', '堂々とした清潔感です。'],
   80: ['十分に爽やかです。', '細部に気をつければさらに良し。', '好感度は高めです。'],
@@ -55,7 +55,7 @@ export const recommendItems = {
 const getRandomScore = () => Math.floor(Math.random() * 4) + 7;
 
 // コメント取得（スコアに応じたコメントをランダムで選ぶ）
-const getRandomComment = (comments: Record<number, string[]>, score: number, type: 'skin' | 'top' | 'under' | 'total') => {
+export const getRandomComment = (comments: Record<number, string[]>, score: number, type: 'skin' | 'top' | 'under' | 'total') => {
   let roundedScore: number;
 
   if (type === 'total') {

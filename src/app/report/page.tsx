@@ -45,25 +45,46 @@ export default function ReportPage() {
     setUsername(storedUsername)
   }, [])
 
-  const getAdvice = () => {
-    if (!selectedConcern || selectedConditions.length === 0) return 'データが不足しています。'
+  const reasonAdvices: Record<string, string> = {
+    '仕事が忙しく疲れがある': '休息とリフレッシュの時間を意識的に取りましょう。',
+    '人間関係のトラブルがある': '無理せず心を休める時間を作りましょう。',
+    '二日酔い': '水分補給をしてゆっくり体を休めましょう。',
+    '寝不足': 'まずはしっかりとした睡眠を心がけましょう。',
+    'ストレスがたまっている': 'リラックスできる時間を意識的に作りましょう。',
+    '運動不足': '軽いストレッチやウォーキングを始めてみましょう。',
+    '肌荒れ・乾燥を感じる': '保湿ケアと生活リズムを整えることを意識しましょう。',
+    '生活リズムが乱れている': '毎日の起床・就寝時間を一定にするよう心がけましょう。',
+    '栄養バランスが悪い': 'バランスの取れた食事を意識してみましょう。',
+    '気分が落ち込んでいる': '無理せず小さな楽しみを見つけることから始めましょう。',
+    'その他': 'まずは無理せず体と心を休めましょう。',
+  };
+  
 
-    const baseAdvice = {
+  const getAdvice = () => {
+    if (!selectedConcern || selectedConditions.length === 0) return 'データが不足しています。';
+  
+    const baseAdvice: Record<'skin' | 'top' | 'under', string> = {
       skin: '肌のケアを見直しましょう。十分な保湿と生活習慣の改善が効果的です。',
       top: '髪のセットや手入れを見直しましょう。ヘアクリームなどの使用もおすすめです。',
-      under: 'ヒゲの手入れを丁寧に行いましょう。肌荒れ対策も忘れずに。'
-    }
-
-    const conditionAdvice = selectedConditions.includes('寝不足')
-      ? 'まずはしっかり睡眠をとることが最優先です。'
-      : selectedConditions.includes('ストレスがたまっている')
-      ? 'リラックスできる時間を意識的に作りましょう。'
-      : selectedConditions.includes('栄養バランスが悪い')
-      ? '食生活を見直すと体調も整いやすくなります。'
-      : '生活リズムを整えることが大切です。'
-
-    return `${baseAdvice[selectedConcern as keyof typeof baseAdvice]} ${conditionAdvice}`
-  }
+      under: 'ヒゲの手入れを丁寧に行いましょう。肌荒れ対策も忘れずに。',
+    };
+  
+    // ここで concern をキーに変換する
+    const concernKeyMap: Record<string, 'skin' | 'top' | 'under'> = {
+      '肌の状態': 'skin',
+      'ヘアセット': 'top',
+      'ヒゲ': 'under',
+    };
+    const concernKey = concernKeyMap[selectedConcern];
+  
+    if (!concernKey) return 'データが不足しています。';
+  
+    // 選ばれた理由の中からランダムに1つ選ぶ
+    const randomCondition = selectedConditions[Math.floor(Math.random() * selectedConditions.length)];
+    const conditionAdvice = reasonAdvices[randomCondition] || '生活リズムを整えることが大切です。';
+  
+    return `${baseAdvice[concernKey]} ${conditionAdvice}`;
+  };
 
   const getRecommendedItem = () => {
     if (!selectedConcern) return null
@@ -163,7 +184,7 @@ export default function ReportPage() {
         <p className="text-gray-700 mb-4">
           「いろんな診療、ぜんぶオンラインで」できる、<br />”Oops（ウープス）”をご紹介します
         </p>
-        <Image src="/oops.jpg" alt="Oopsロゴ" width={300} height={105} className="mb-8 mx-auto" />
+        <Image src='https://medimee.com/_ipx/f_webp,q_80,s_686x359/storage/clinic/141/thumbnail_20250228220028.jpg' alt="Oopsロゴ" width={300} height={105} className="mb-8 mx-auto" />
         {/* <Image
           src="/oops-logo.png" // ✅ ドメイン許可不要
           alt="Oops紹介"
@@ -197,7 +218,9 @@ export default function ReportPage() {
         <p className="text-gray-700 text-sm leading-relaxed">
           コンディション入力ありがとうございました！<br />
           QRコードを読み取ってクーポンを使いましょう！<br />
-          スクリーンショットしておくことをおすすめします。<br /><br />
+          スクリーンショットしておくことをおすすめします。
+        </p>
+        <p className="text-red-400 text-sm leading-relaxed">
           ※QRコードは、MVP用のダミーです。
         </p>
       </div>
