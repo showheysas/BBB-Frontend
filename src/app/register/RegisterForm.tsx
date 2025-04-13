@@ -2,6 +2,8 @@
 
 import { useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
+import Link from 'next/link'
+import Image from 'next/image'
 import { motion } from 'framer-motion'
 import { Inter, Noto_Sans_JP } from 'next/font/google'
 
@@ -106,10 +108,22 @@ export function RegisterForm() {
         </p>
       </div>
 
-      <p className="text-red-400 text-sm leading-relaxed">
-        ※MVP用のダミーページです。<br />
-        「登録」してもDBには保存されず、ユーザーのデバイスのキャッシュにのみ残ります。
+      <p className="text-red-400 text-sm leading-relaxed mb-30">
+        ※MVP用のダミーページです。実際には登録されません。
       </p>
+
+      
+      {/* ナビゲーションバー */}
+      <div className="fixed bottom-0 w-full flex bg-white shadow-inner h-20 z-50">
+        <div className="w-1/3 flex items-center justify-center border-r border-gray-300"></div>
+        <div className="w-1/3 flex items-center justify-center border-r border-gray-300">
+          <Link href="/">
+            <Image src="/icons/home.svg" alt="ホーム" width={24} height={24} className="w-6 h-6 cursor-pointer" />
+          </Link>
+        </div>
+        <div className="w-1/3 flex items-center justify-center"></div>
+      </div>
+
     </motion.div>
   )
 }

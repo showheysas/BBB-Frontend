@@ -9,12 +9,21 @@ import Link from 'next/link'
 import { Inter, Noto_Sans_JP } from 'next/font/google'
 import Image from 'next/image'
 import { skinComments, topComments, underComments, getRandomComment, recommendItems, generateRandomFaceScore } from '@/lib/mockData'
+import { Suspense } from 'react'
 
 
 const inter = Inter({ weight: ['900'], subsets: ['latin'] })
 const notoSansJP = Noto_Sans_JP({ weight: ['400', '700'], subsets: ['latin'] })
 
 export default function ResultPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <ActualResultPage />
+    </Suspense>
+  )
+}
+
+function ActualResultPage() {
   const router = useRouter()
   const searchParams = useSearchParams()
   //const searchTransactionId = searchParams.get('transaction_id')

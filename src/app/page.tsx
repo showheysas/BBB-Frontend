@@ -28,6 +28,7 @@ export default function StartPage() {
   const handleModeSelect = (mode: 'local' | 'backend') => {
     localStorage.setItem('mode', mode)
     setModeSelected(true)
+    window.dispatchEvent(new Event('authChanged')) // モードが変わったことを知らせるイベントを飛ばす！
   }
 
   useEffect(() => {
@@ -65,10 +66,10 @@ export default function StartPage() {
           <h1 className="text-2xl font-bold text-gray-800 mb-4">モード選択</h1>
           <button
             onClick={() => handleModeSelect('local')}
-            className="bg-gray-700 hover:bg-gray-800 text-white px-6 py-4 rounded shadow text-lg transition w-64"
+            className="bg-gray-700 hover:bg-gray-800 text-white px-6 py-4 rounded shadow text-xl font-bold transition w-64"
           >
             ローカル版で使う
-            <p className="text-sm text-center bg-white-90 text-base mt-3">
+            <p className="text-xs text-center bg-white-90 text-base mt-3">
             ・判定スコアはダミーです<br />・撮影画像は保存されません
             </p>
           </button>
@@ -77,10 +78,10 @@ export default function StartPage() {
           </p> */}
           <button
             onClick={() => handleModeSelect('backend')}
-            className="bg-red-400 hover:bg-red-500 text-white px-6 py-4 rounded shadow text-lg transition w-64"
+            className="bg-red-400 hover:bg-red-500 text-white px-6 py-4 rounded shadow text-xl font-bold transition w-64"
           >
             CNN版で使う
-            <p className="text-sm text-center bg-white-90 text-base mt-3">
+            <p className="text-xs text-center bg-white-90 text-base mt-3">
             ＜最終発表当日（4/16）のみ＞<br />・CNNでスコア判定します<br />・撮影画像はDBに保存されます
             </p>
           </button>
