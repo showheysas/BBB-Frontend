@@ -15,21 +15,15 @@ export default function CameraPage() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const [countdown, setCountdown] = useState<number | null>(null)
   const [isCountingDown, setIsCountingDown] = useState(false)
-  const [stream, setStream] = useState<MediaStream | null>(null)
   const [showShutter, setShowShutter] = useState(false)
   const [captured, setCaptured] = useState(false)
   const router = useRouter()
-  const [mode, setMode] = useState<'local' | 'backend' | null>(null)
 
   useEffect(() => {
-    const savedMode = localStorage.getItem('mode') as 'local' | 'backend' | null;
-    setMode(savedMode);
-
     const startCamera = async () => {
       const mediaStream = await navigator.mediaDevices.getUserMedia({ video: true })
       if (videoRef.current) {
         videoRef.current.srcObject = mediaStream
-        setStream(mediaStream)
       }
     }
 

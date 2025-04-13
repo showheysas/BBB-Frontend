@@ -26,6 +26,13 @@ export default function ResultPage() {
     setMode(savedMode)
   }, [])
   
+  type FaceScoreType = {
+    total: { score: number; comment: string };
+    skin: { score: number; comment: string };
+    top: { score: number; comment: string };
+    under: { score: number; comment: string };
+    recommendItem: { name: string; image: string; link: string; text: string };
+  };
 
   const [showResult, setShowResult] = useState(() => {
     const redirected = searchParams.get('redirected');
@@ -34,7 +41,7 @@ export default function ResultPage() {
   const [currentTime, setCurrentTime] = useState<string | null>(null)
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [username, setUsername] = useState('ゲスト')
-  const [faceScore, setFaceScore] = useState<any>(null)
+  const [faceScore, setFaceScore] = useState<FaceScoreType | null>(null);
   const [imageUrl, setImageUrl] = useState<string | null>(null)
   const [transactionId, setTransactionId] = useState<string | null>(null)
   const [isGuestUser, setIsGuestUser] = useState(false);
@@ -279,7 +286,7 @@ export default function ResultPage() {
             {/* レーダーチャート */}
             <div className="w-full max-w-md mb-8">
               <ResponsiveContainer width="100%" height={300}>
-                <RadarChart data={fixedInfo.map(item => ({ subject: item.subject, score: faceScore[item.key].score, fullMark: item.fullMark }))} outerRadius="80%">
+                <RadarChart data={fixedInfo.map(item => ({ subject: item.subject, score: (faceScore as any)[item.key].score, fullMark: item.fullMark }))} outerRadius="80%">
                   <PolarGrid stroke="#ccc" />
                   <PolarAngleAxis dataKey="subject" tick={renderTwoLineLabel} />
                   <PolarRadiusAxis domain={[0, 10]} tick={false} axisLine={false} />
@@ -335,7 +342,7 @@ export default function ResultPage() {
                       onClick={() => router.push('/todaysWord')}
                       className="bg-gray-700 hover:bg-gray-800 font-semibold text-white px-6 py-2 rounded shadow text-lg transition"
                     >
-                      Today's WORDを見る！
+                      Today&apos;s WORDを見る！
                     </button>
                   </div>
 
