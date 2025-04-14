@@ -164,14 +164,28 @@ export default function ReportPage() {
           />
           <p className="text-lg font-semibold text-gray-800 mb-2">{recommendedItem.name}</p>
           <p className="text-sm text-gray-600 mb-4">{recommendedItem.text}</p>
-          <a
-            href={recommendedItem.link}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-block bg-gray-300 hover:bg-gray-400 text-gray-700 font-semibold px-4 py-2 rounded shadow text-sm transition"
-          >
-            商品ページを見る
-          </a>
+          <div className="flex justify-center gap-4">
+            {/* もともとのボタン */}
+            <a
+              href={recommendedItem.link}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-block bg-gray-300 hover:bg-gray-400 text-gray-700 font-semibold px-4 py-2 rounded shadow text-sm transition"
+            >
+              商品ページを見る
+            </a>
+
+            {/* 新しく追加するAmazonボタン */}
+            <a
+              href={`https://www.amazon.co.jp/s?k=${encodeURIComponent(recommendedItem.name)}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center bg-gray-300 hover:bg-gray-400 text-gray-700 font-semibold px-3 py-2 rounded shadow text-sm transition"
+            >
+              <img src="/icons/amazon-logo.png" alt="Amazon" className="w-15 h-6 mr-2" />
+              で検索
+            </a>
+          </div>
         </div>
       )}
 
@@ -225,10 +239,18 @@ export default function ReportPage() {
         </p>
       </div>
 
+      {/* ヒストリーボタン */}
+      <button
+        onClick={() => router.push('/history')}
+        className="bg-gray-700 hover:bg-gray-800 font-semibold text-white px-6 py-2 rounded shadow text-lg transition mb-4"
+      >
+        ヒストリーレポート
+      </button>
+
       {/* 戻るボタン */}
       <button
         onClick={() => router.push('/')}
-        className="bg-gray-700 hover:bg-gray-800 font-semibold text-white px-6 py-2 rounded shadow text-lg transition"
+        className="bg-gray-700 hover:bg-gray-800 font-semibold text-white px-6 py-2 rounded shadow text-lg transition mb-12"
       >
         ホームへ戻る
       </button>

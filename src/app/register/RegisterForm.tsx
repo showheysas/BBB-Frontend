@@ -28,17 +28,19 @@ export function RegisterForm() {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-
+  
     if (formData.username.trim().toLowerCase() === 'kiriyama') {
       setError('このユーザー名はすでに使われています')
       return
     }
-
+  
     // 仮登録処理
     localStorage.setItem('isAuthenticated', 'true')
     localStorage.setItem('username', formData.username)
+    localStorage.setItem('token', 'dummy_token') // 🔥 ここを追加
+  
     window.dispatchEvent(new Event('authChanged'))
-
+  
     const redirect = searchParams.get('redirect') || '/'
     router.push(redirect)
   }
@@ -50,10 +52,14 @@ export function RegisterForm() {
       transition={{ duration: 1 }}
       className={`flex flex-col items-center justify-center min-h-screen bg-gray-100 p-6 ${notoSansJP.className}`}
     >
-      <div className="bg-white p-8 rounded shadow-md w-full max-w-md mb-8 mt-12">
+      <div className="bg-white p-8 rounded shadow-md w-full max-w-md mb-32 mt-20">
         <h2 className={`${inter.className} text-3xl font-bold text-center text-gray-800 mb-6`}>
           新規登録
         </h2>
+
+        <p className="text-red-400 text-xs leading-relaxed mb-8">
+        ※MVP用のダミーページです。任意の情報で「登録する」ボタンを押すと、以降のページでログイン状態になりますが、DBには登録されません。
+        </p>
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-6">
           {['username', 'email', 'birthday', 'password'].map((field) => (
@@ -107,11 +113,6 @@ export function RegisterForm() {
           </span>
         </p>
       </div>
-
-      <p className="text-red-400 text-sm leading-relaxed mb-30">
-        ※MVP用のダミーページです。実際には登録されません。
-      </p>
-
       
       {/* ナビゲーションバー */}
       <div className="fixed bottom-0 w-full flex bg-white shadow-inner h-20 z-50">

@@ -263,11 +263,15 @@ export default function CameraPage() {
       className={`flex flex-col items-center p-6 pt-24 pb-24 bg-gray-100 min-h-screen relative ${notoSansJP.className}`}
     >
       {/* タイトル */}
-      <div className="flex flex-col items-center text-center mb-8 space-y-4 w-full max-w-md">
+      <div className="flex flex-col items-center text-center space-y-4 w-full max-w-md mb-4">
         <h2 className={`${inter.className} text-5xl italic tracking-tight leading-tight text-gray-800 border-b-2 border-gray-300 pb-1`}>
           FACE GAUGE
         </h2>
       </div>
+
+      <p className="text-base text-gray-800 text-center mb-2">
+        画面の中にあなたの顔を入れてください<br />カウントダウンのあと自動で撮影します
+      </p>
 
       <div className="relative w-full max-w-md">
         <video
@@ -292,10 +296,6 @@ export default function CameraPage() {
           </motion.div>
         )}
       </div>
-
-      <p className="text-xl text-gray-800 text-center mt-8">
-        画面の中にあなたの顔を入れてください<br />カウントダウンのあと自動で撮影します
-      </p>
 
       {/* シャッターエフェクト */}
       {showShutter && (

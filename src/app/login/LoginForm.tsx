@@ -98,6 +98,15 @@ export function LoginForm() {
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4">
       <h1 className="text-2xl font-bold mb-6 text-black">ログイン</h1>
 
+      {/* 🔥 注意文もモードで切り替え */}
+      <p className="text-red-400 text-sm leading-relaxed mb-8 text-center">
+        {mode === 'local' ? (
+          <>※このまま（ユーザー名：kiriyama、PW：ren）<br />でログインしてください。</>
+        ) : (
+          <>※このまま（ユーザー名：shosan、PW：123）<br />でログインしてください。</>
+        )}
+      </p>
+
       <form onSubmit={handleLogin} className="flex flex-col gap-4 w-80">
         <input
           type="text"
@@ -120,15 +129,6 @@ export function LoginForm() {
         <button type="submit" className="bg-gray-800 text-white px-4 py-2 rounded mb-8">
           ログイン
         </button>
-
-        {/* 🔥 注意文もモードで切り替え */}
-        <p className="text-red-400 text-sm leading-relaxed mb-8 text-center">
-          {mode === 'local' ? (
-            <>※MVPでは、ユーザー名：kiriyama、PW：ren<br />でログインしてください。</>
-          ) : (
-            <>※MVPでは、ユーザー名：shosan、PW：123<br />でログインしてください。</>
-          )}
-        </p>
 
         <p className="text-gray-700 text-center text-sm">もしくは</p>
 

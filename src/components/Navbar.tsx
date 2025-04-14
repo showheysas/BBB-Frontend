@@ -95,25 +95,27 @@ export default function Navbar() {
 
       {/* 右半分 */}
       <div className="flex items-center w-1/2 gap-1">
-        {/* モードエリア */}
-        <div className="flex flex-col w-1/2 items-center justify-center">
-          {/* 上段：現在モード表示 */}
+      {/* モードエリア */}
+      <div className="flex flex-col w-1/2 items-center justify-center">
+        {/* 上段：現在モード表示 */}
+        {mode !== null && mode !== '' && mode !== '未選択' && (
           <p
             className={`text-xs font-bold mb-1 ${
               mode === 'backend' ? 'text-red-400' : 'text-gray-700'
             }`}
           >
-            {mode === 'local' ? 'ローカル版' : mode === 'backend' ? 'CNN版' : '未選択'}
+            {mode === 'local' ? 'ローカル版' : mode === 'backend' ? 'CNN版' : ''}
           </p>
+        )}
 
-          {/* 下段：モードボタン */}
-          <button
-            onClick={handleResetMode}
-            className="bg-white border border-red-400 text-red-400 px-4 py-1.5 rounded-md shadow transition-all duration-300 text-xs hover:bg-red-50"
-          >
-            モード
-          </button>
-        </div>
+        {/* 下段：モードボタン */}
+        <button
+          onClick={handleResetMode}
+          className="bg-white border border-red-400 text-red-400 px-4 py-1.5 rounded-md shadow transition-all duration-300 text-xs hover:bg-red-50"
+        >
+          モード
+        </button>
+      </div>
 
 {/*       
       <div className="flex w-1/2">
@@ -143,13 +145,17 @@ export default function Navbar() {
 
         {/* ログイン名・ボタン */}
         <div className="flex flex-col w-1/2 items-center justify-center">
-          <span className="text-xs text-gray-700 mb-1">{username}</span>
+          {/* 🔥 ここに条件をつける */}
+          {username !== '未ログイン' && username !== '未選択' && (
+            <span className="text-xs text-gray-700 mb-1">{username}</span>
+          )}
+          
           {isAuthenticated ? (
-            <button onClick={handleLogout} className="bg-gray-700 hover:bg-gray-800 text-white px-4 py-1.5 rounded-md shadow transition-all duration-300 text-xs">
+            <button onClick={handleLogout} className="bg-gray-700 hover:bg-gray-800 text-white px-4 py-1.5 rounded-md shadow transition-all duration-300 text-xs whitespace-nowrap">
               ログアウト
             </button>
           ) : (
-            <button onClick={handleLogin} className="bg-gray-200 hover:bg-gray-300 text-black px-4 py-1.5 rounded-md shadow transition-all duration-300 text-xs">
+            <button onClick={handleLogin} className="bg-gray-200 hover:bg-gray-300 text-black px-4 py-1.5 rounded-md shadow transition-all duration-300 text-xs whitespace-nowrap">
               ログイン
             </button>
           )}

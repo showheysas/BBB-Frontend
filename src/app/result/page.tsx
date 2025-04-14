@@ -275,13 +275,18 @@ function ActualResultPage() {
 
       {/* 測定ボタン */}
       {!showResult && (
-        <div className="flex gap-6 mb-8">
-          <button onClick={() => router.push('/camera')} className="bg-gray-700 hover:bg-gray-800 font-semibold text-white px-6 py-2 rounded shadow text-lg transition">
-            撮り直し
-          </button>
-          <button onClick={handleMeasureClick} className="bg-gray-700 hover:bg-gray-800 font-semibold text-white px-6 py-2 rounded shadow text-lg transition">
-            測定結果
-          </button>
+        <div>
+          <p className="text-base text-gray-800 text-center mb-1">
+            この画像でよいでしょうか？
+          </p>
+          <div className="flex gap-6 mb-8">
+            <button onClick={() => router.push('/camera')} className="bg-gray-700 hover:bg-gray-800 font-semibold text-white px-6 py-2 rounded shadow text-lg transition">
+              撮り直し
+            </button>
+            <button onClick={handleMeasureClick} className="bg-gray-700 hover:bg-gray-800 font-semibold text-white px-6 py-2 rounded shadow text-lg transition">
+              測定結果
+            </button>
+          </div>
         </div>
       )}
 
@@ -349,14 +354,28 @@ function ActualResultPage() {
                   />
                   <p className="text-lg font-semibold text-gray-800 mb-2">{faceScore.recommendItem.name}</p>
                   <p className="text-sm text-gray-600 mb-4">{faceScore.recommendItem.text}</p>
-                  <a
-                    href={faceScore.recommendItem.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-block bg-gray-300 hover:bg-gray-400 text-gray-700 font-semibold px-4 py-2 rounded shadow text-sm transition"
-                  >
-                    商品ページ
-                  </a>
+                  <div className="flex justify-center gap-4">
+                    {/* もともとのボタン */}
+                    <a
+                      href={faceScore.recommendItem.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-block bg-gray-300 hover:bg-gray-400 text-gray-700 font-semibold px-4 py-2 rounded shadow text-sm transition"
+                    >
+                      商品ページを見る
+                    </a>
+
+                    {/* 新しく追加するAmazonボタン */}
+                    <a
+                      href={`https://www.amazon.co.jp/s?k=${encodeURIComponent(faceScore.recommendItem.name)}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center bg-gray-300 hover:bg-gray-400 text-gray-700 font-semibold px-3 py-2 rounded shadow text-sm transition"
+                    >
+                      <img src="/icons/amazon-logo.png" alt="Amazon" className="w-15 h-6 mr-2" />
+                      で検索
+                    </a>
+                  </div>
                 </div>
 
                 {/* 次のアクション表示 */}
