@@ -189,6 +189,53 @@ export default function HistoryPage() {
         </div>
       )}
 
+      {/* レポート評価・メモ */}
+      <div className="bg-white border border-gray-400 rounded-xl p-6 mb-8 w-full max-w-md text-center shadow">
+        {/* レポート評価 */}
+        <h3 className="text-xl font-bold text-gray-600 mb-4">レポート評価</h3>
+        <div className="flex justify-center gap-2 mb-6">
+          {[1, 2, 3, 4, 5].map((star) => (
+            <button
+              key={star}
+              onClick={() => {
+                if (typeof window !== 'undefined') {
+                  window.alert(`⭐️ ${star}つ星を選びました！`);
+                }
+              }}
+              className="text-3xl hover:scale-110 transition-transform text-yellow-400" // ⭐ここで色指定
+              style={{ color: '#bfae80' }} // ← グレー寄りのシックな黄色
+            >
+              ★
+            </button>
+          ))}
+        </div>
+
+        {/* メモ記録 */}
+        <h3 className="text-xl font-bold text-gray-600 mb-4">メモ記録</h3>
+        <p className="text-gray-700 text-sm mb-4">
+          気づいたことを記録しましょう
+        </p>
+        <textarea
+          id="memo"
+          placeholder="例）最近ヒゲの状態が良くなってきた！"
+          className="w-full border border-gray-300 rounded p-3 mb-4 text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-700"
+          rows={4}
+        />
+        <button
+          onClick={() => {
+            const memo = (document.getElementById('memo') as HTMLTextAreaElement)?.value;
+            if (memo.trim() !== '') {
+              window.alert('メモを記録しました！');
+            } else {
+              window.alert('メモが空です。内容を入力してください。');
+            }
+          }}
+          className="bg-gray-700 hover:bg-gray-800 text-white py-2 px-6 rounded shadow text-sm transition"
+        >
+          記録
+        </button>
+      </div>
+
       {/* Oops紹介エリア */}
       <div className="bg-white border border-gray-400 rounded-xl p-6 mb-8 w-full max-w-md text-center shadow">
         <h3 className="text-lg font-bold text-gray-800 mb-4">
