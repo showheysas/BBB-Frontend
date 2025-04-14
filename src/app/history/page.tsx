@@ -42,7 +42,16 @@ const dummyDataYear = [...dummyDataMonth] // 今は月と同じにしてるけ�
 export default function HistoryPage() {
   const router = useRouter()
   const [advice, setAdvice] = useState('')
-  const [recommendItem, setRecommendItem] = useState<any>(null)
+
+  type RecommendItemType = {
+    name: string
+    image: string
+    text: string
+    link: string
+  }
+  
+  const [recommendItem, setRecommendItem] = useState<RecommendItemType | null>(null)
+  
   const [period, setPeriod] = useState<'week' | 'month' | 'year'>('week')
 
   const getCurrentData = () => {
@@ -55,7 +64,6 @@ export default function HistoryPage() {
     const currentData = getCurrentData()
     const avgUnder = currentData.reduce((sum, d) => sum + d.under, 0) / currentData.length
     const avgSkin = currentData.reduce((sum, d) => sum + d.skin, 0) / currentData.length
-    const latestUnder = currentData[currentData.length - 1]?.under || 0
   
     if (period === 'week') {
       if (avgUnder < 6) {
