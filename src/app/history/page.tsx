@@ -182,8 +182,8 @@ export default function HistoryPage() {
               rel="noopener noreferrer"
               className="flex items-center bg-gray-300 hover:bg-gray-400 text-gray-700 font-semibold px-3 py-2 rounded shadow text-sm transition"
             >
-              <img src="/icons/amazon-logo.png" alt="Amazon" className="w-15 h-6 mr-2" />
-              で検索
+              {/* <img src="/icons/amazon-logo.png" alt="Amazon" className="w-15 h-6 mr-2" /> */}
+              Amazonで検索
             </a>
           </div>
         </div>

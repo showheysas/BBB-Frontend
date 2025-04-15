@@ -280,7 +280,7 @@ export default function CameraPage() {
           muted
           playsInline
           className="w-full rounded shadow"
-          style={{ objectFit: "contain" }}
+          style={{ objectFit: "contain", transform: "scaleX(-1)" }}
         />
 
         {isCountingDown && countdown !== null && (
