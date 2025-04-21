@@ -109,7 +109,7 @@ BBB-Frontend/
 ## 🚀 セットアップ手順
 
 ```bash
-git clone https://github.com/yourname/face-gauge.git
+git clone https://github.com/showheysas/BBB-Frontend.git
 cd face-gauge
 npm install
 npm run dev
