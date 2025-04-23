@@ -108,6 +108,7 @@ BBB-Frontend/
 
 ## アーキテクチャ図
 
+以下はバックエンドモードの場合
 ![image](https://github.com/user-attachments/assets/25f6f586-d737-42f6-9533-043052b785f3)
 
 ---
