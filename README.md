@@ -98,12 +98,10 @@ BBB-Frontend/
 ## 🗺️ アーキテクチャ図
 
 バックエンド連携（CNN版）モード
-![image](https://github.com/user-attachments/assets/05a62170-091c-4543-bfeb-f7d4d5ab681b)
-
+![image](https://github.com/user-attachments/assets/7c8e29ea-2192-4608-9a56-815697480aeb)
 
 ローカルモード
-![image](https://github.com/user-attachments/assets/f811d2c9-c4f7-4c21-a919-0bde094343ab)
-
+![image](https://github.com/user-attachments/assets/9618e5e4-04bb-484f-87cd-f95a31e5f727)
 
 ---
 
