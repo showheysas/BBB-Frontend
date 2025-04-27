@@ -88,9 +88,10 @@ BBB-Frontend/
 
 ```
 ### 構成上のポイント！
-・src/components/Navibar.tsx　　上部ナビゲーションバーは全ページで表示するため、共通データとして格納
-・src/lib/mochDat.ts　　DBデータを模擬的に格納し、ローカルモードでフロントエンドのみで作動するよう設計
-・public/models   face-api.js で使用する顔認識モデルを格納
+
+- src/components/Navibar.tsx　　上部ナビゲーションバーは全ページで表示するため、共通データとして格納
+- src/lib/mochDat.ts　　DBデータを模擬的に格納し、ローカルモードでフロントエンドのみで作動するよう設計
+- public/models   face-api.js で使用する顔認識モデルを格納
 
 ---
 
