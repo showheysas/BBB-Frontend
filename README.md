@@ -14,16 +14,24 @@
 - 初回アクセス時に、バックエンド連携モード（CNN版）とローカルモードを選択可能
 - モード選択結果はlocalStorageに保存、以後すべての画面で選択されたモードに対応するようコーディング
   　![image](https://github.com/user-attachments/assets/7c5b7267-2b42-4370-901b-04fbbb7db34f)
+
 - 顔検出と自動撮影（3秒カウントダウン）
 - ローカルモードによる簡易スコア生成（ダミーデータ）
+　　![image](https://github.com/user-attachments/assets/bef01100-652c-461c-9264-9d94e1092a96)
+
 - バックエンドモードによる実測スコア取得（API連携）
-- 各指標のレーダーチャート表示、
+- 各指標のレーダーチャート描画、ヒストリーレポートでのラインチャート描画
+　　![image](https://github.com/user-attachments/assets/7a1760f6-1639-4b81-babd-1a2c5d2e6032) ![image](https://github.com/user-attachments/assets/ede5ba6e-7257-4297-87ba-7b64e6a632a5)
+　　
 - スコアに応じたコメントとおすすめ商品の提示
-- 未ログイン・ゲストログイン・正式ログインの認証状態管理
+- 未ログイン・ゲストログイン・正式ログインの認証状態管理　→　後述の「認証状態と画面遷移の仕様」参照
 - ナビゲーションバーでの画面移動や設定
+　　![image](https://github.com/user-attachments/assets/ad4adf32-8875-476d-824b-9331f7306280)　![image](https://github.com/user-attachments/assets/448e3e57-9518-49ac-805f-3029a2b9834c)
+
 - ログイン後のリダイレクト処理（状態保持）
 - 撮影・切り出し後の画像をフロントエンドで保持（バックエンドから呼び出さない）することで、画面遷移を軽量化
 - ログイン画面で情報入力済みをデフォルトにすることで、MVP段階でのユーザビリティ向上
+　　![image](https://github.com/user-attachments/assets/3e9b956f-9f08-4e68-bd5a-e11653da38b7)
 
 ---
 
